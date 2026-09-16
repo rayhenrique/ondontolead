@@ -35,4 +35,25 @@ return [
         ],
     ],
 
+    'ai' => [
+        'connect_timeout' => (int) env('AI_CONNECT_TIMEOUT', 3),
+        'timeout' => (int) env('AI_TIMEOUT', 12),
+        'openai' => [
+            'base_url' => env('OPENAI_BASE_URL', 'https://api.openai.com/v1'),
+            'model' => env('OPENAI_TRIAGE_MODEL', 'gpt-5-mini'),
+        ],
+        'gemini' => [
+            'base_url' => env('GEMINI_BASE_URL', 'https://generativelanguage.googleapis.com/v1beta'),
+            'model' => env('GEMINI_TRIAGE_MODEL', 'gemini-3.5-flash'),
+        ],
+    ],
+
+    'mercado_pago' => [
+        'access_token' => env('MERCADO_PAGO_ACCESS_TOKEN'),
+        'base_url' => env('MERCADO_PAGO_BASE_URL', 'https://api.mercadopago.com'),
+        'connect_timeout' => (int) env('MERCADO_PAGO_CONNECT_TIMEOUT', 3),
+        'timeout' => (int) env('MERCADO_PAGO_TIMEOUT', 10),
+        'webhook_secret' => env('MERCADO_PAGO_WEBHOOK_SECRET'),
+    ],
+
 ];

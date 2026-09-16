@@ -2,7 +2,7 @@
 
 Micro-SaaS B2B multi-tenant para clínicas odontológicas captarem, qualificarem e agendarem leads vindos de tráfego pago. A experiência pública combina triagem clínica, seleção segura de horário e encaminhamento qualificado para o WhatsApp da clínica.
 
-> **Status atual: desenvolvimento (`v0.3.0`).** O projeto ainda não está pronto para uso em produção. As Fases 1, 2 e 3 estão concluídas.
+> **Status atual: desenvolvimento (`v0.4.0`).** O projeto ainda não está pronto para uso em produção. As Fases 1 a 4 estão concluídas.
 
 ## Estado da implementação
 
@@ -11,7 +11,7 @@ Micro-SaaS B2B multi-tenant para clínicas odontológicas captarem, qualificarem
 | 1. Setup e base de dados | Concluída |
 | 2. Models, tenancy e scopes | Concluída |
 | 3. Autenticação e middlewares | Concluída |
-| 4. Core Services | Pendente |
+| 4. Core Services | Concluída |
 | 5. Módulo SuperAdmin | Pendente |
 | 6. Módulo da clínica | Pendente |
 | 7. Formulário público | Pendente |
@@ -84,6 +84,24 @@ php artisan serve
 
 O arquivo `.env` contém segredos e não deve ser versionado.
 
+Para exercitar as integrações da Fase 4, configure também as variáveis aplicáveis ao ambiente. As chaves de IA não são globais: cada clínica fornece sua própria chave, armazenada criptografada no banco.
+
+```dotenv
+AI_CONNECT_TIMEOUT=3
+AI_TIMEOUT=12
+OPENAI_TRIAGE_MODEL=gpt-5-mini
+GEMINI_TRIAGE_MODEL=gemini-3.5-flash
+
+MERCADO_PAGO_ACCESS_TOKEN=
+MERCADO_PAGO_WEBHOOK_SECRET=
+```
+
+O processamento assíncrono dos webhooks depende de um worker de filas ativo:
+
+```bash
+php artisan queue:work --queue=webhooks,default --tries=4 --timeout=30
+```
+
 ## Validação
 
 ```bash
@@ -104,6 +122,13 @@ Na versão atual, as migrations também foram validadas com execução, rollback
 - Policies impedem acesso cruzado entre clínicas em agendamentos, horários, datas bloqueadas, triagens e usuários.
 - Leituras de releases são privadas por usuário; apenas SuperAdmin pode gerenciar releases.
 
+## Core Services implementados
+
+- Agendamento centralizado em transação, com bloqueios pessimistas, validação integral da agenda e proteção contra horários duplicados.
+- Triagem por OpenAI ou Gemini usando a chave BYOK da clínica, saída estruturada e fallback determinístico quando a IA não estiver configurada ou disponível.
+- Recepção idempotente de eventos de assinatura do Mercado Pago, consulta da assinatura, atualização transacional da clínica e processamento assíncrono por Job criptografado.
+- Registro do ciclo de processamento em `payment_logs`, sem persistir credenciais ou cabeçalhos sensíveis.
+
 ## Arquitetura obrigatória
 
 - Regras de negócio em Service Classes, nunca em Controllers, rotas ou Views.
@@ -116,7 +141,7 @@ Na versão atual, as migrations também foram validadas com execução, rollback
 
 ## Publicação
 
-Não publique a versão atual como aplicação de produção. As proteções básicas de autenticação, assinatura e autorização multi-tenant já existem, mas os serviços críticos, os painéis, o formulário público e os testes finais de concorrência e idempotência ainda não foram implementados.
+Não publique a versão atual como aplicação de produção. As proteções de autenticação, assinatura e autorização multi-tenant e os Core Services já existem, mas os painéis, o formulário público, o endpoint HTTP autenticado do webhook e os testes finais de concorrência e idempotência ainda não foram implementados.
 
 Uma VPS de **staging**, sem usuários reais e com acesso restrito, pode ser preparada antecipadamente para validar PHP, MySQL, servidor web, SSL, filas e processo de deploy. A publicação para clientes deve ocorrer somente quando:
 

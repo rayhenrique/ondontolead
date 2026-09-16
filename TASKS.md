@@ -17,10 +17,10 @@
   - [x] 3.3 Middleware `CheckUnreadReleases` detectando novas atualizações para disparar o modal via Livewire.
   - [x] 3.4 Policies para garantir que Tenant A não acesse dados do Tenant B.
 
-- [ ] **Fase 4: Core Services**
-  - [ ] 4.1 `AppointmentBookingService`: Uso de `DB::transaction()` e bloqueio pessimista para agendamentos.
-  - [ ] 4.2 `AiTriageService`: Integração agnóstica Gemini/OpenAI e fluxo de fallback com questionário fixo.
-  - [ ] 4.3 `MercadoPagoWebhookService`: Job em Queue para tratar assinaturas garantindo idempotência com `payment_logs`.
+- [x] **Fase 4: Core Services**
+  - [x] 4.1 `AppointmentBookingService`: Uso de `DB::transaction()` e bloqueio pessimista para agendamentos.
+  - [x] 4.2 `AiTriageService`: Integração agnóstica Gemini/OpenAI e fluxo de fallback com questionário fixo.
+  - [x] 4.3 `MercadoPagoWebhookService`: Job em Queue para tratar assinaturas garantindo idempotência com `payment_logs`.
 
 - [ ] **Fase 5: Módulo SuperAdmin (`/admin`)**
   - [ ] 5.1 Dashboard (métricas gerais) e controle de `system_settings` em cache.

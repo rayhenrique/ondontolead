@@ -23,14 +23,53 @@ Cada nova release deve informar:
 
 ## Não lançado
 
-### Ajustado
-
-- Licenciamento proprietário formalizado em nome da KL Tecnologia, com atualização do `README.md`, metadados do Composer e arquivo `LICENSE`.
-
 ### Planejado
 
-- Fases 4 a 8 do checklist de implementação.
+- Fases 5 a 8 do checklist de implementação.
 - Release de produção `v1.0.0` após aprovação de todos os critérios do MVP.
+
+## v0.4.0 — 2026-09-16
+
+**Status:** Core Services de agendamento, triagem e assinatura concluídos; não apta para produção.
+
+### Adicionado
+
+- `AppointmentBookingService` com transação, bloqueios pessimistas e validação de agenda, intervalo, duração, bloqueios, passado e conflito de horário.
+- Exceção de domínio para indisponibilidade de horário e proteção complementar pelo índice único do banco.
+- Contrato, DTOs e adaptadores de triagem estruturada para OpenAI e Gemini usando a chave BYOK criptografada da clínica.
+- Fallback determinístico de triagem para ausência de chave, provedor indisponível ou resposta inválida.
+- Cliente do Mercado Pago com limites explícitos de conexão e resposta.
+- Serviço idempotente de webhook com hash canônico do evento, consulta da assinatura e atualização transacional da clínica.
+- Job de webhook único, criptografado, executado após commit e configurado com tentativas e backoff.
+- Testes de serviço, integrações HTTP simuladas, validações de agendamento, fallback de IA, reprocessamento e idempotência.
+
+### Ajustado
+
+- Configuração e `.env.example` documentados para modelos de IA, timeouts e credenciais do Mercado Pago.
+- Licenciamento proprietário formalizado em nome da KL Tecnologia, com atualização do `README.md`, metadados do Composer e arquivo `LICENSE`.
+
+### Validação
+
+- 111 testes executados: 104 aprovados e 7 condicionais ignorados, totalizando 325 asserções.
+- Formatação Pint aprovada.
+- Auditoria Composer sem vulnerabilidades conhecidas.
+- `composer.json` validado, mantendo apenas o aviso já existente sobre a restrição exata do Jetstream.
+
+### Changelog sugerido para `app_releases`
+
+- **Versão:** `v0.4.0`
+- **Título:** Agendamento seguro, triagem híbrida e assinaturas
+- **Resumo:** serviços transacionais de agendamento, triagem com IA e fallback determinístico, além do processamento idempotente das assinaturas do Mercado Pago.
+
+### Limitações conhecidas
+
+- Os painéis e formulários que consomem estes serviços pertencem às Fases 5 a 7.
+- O endpoint HTTP e a verificação da assinatura do webhook do Mercado Pago pertencem à Fase 5.
+- Os testes finais de concorrência real em MySQL e idempotência pela camada HTTP pertencem à Fase 8.
+
+### Deploy
+
+Não publicar esta versão para usuários reais. Em staging, configure as credenciais do Mercado Pago e mantenha um worker para a fila `webhooks`; as chaves de IA continuam sendo fornecidas individualmente por clínica.
 
 ## v0.3.0 — 2026-09-15
 
