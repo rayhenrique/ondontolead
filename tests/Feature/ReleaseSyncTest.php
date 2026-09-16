@@ -14,12 +14,11 @@ class ReleaseSyncTest extends TestCase
     public function test_sync_command_synchronizes_releases_from_markdown(): void
     {
         $this->artisan('releases:sync')
-            ->expectsOutputToContain('Total de 8 releases sincronizadas com sucesso')
+            ->expectsOutputToContain('Total de 9 releases sincronizadas com sucesso')
             ->assertSuccessful();
 
         $this->assertDatabaseHas('app_releases', [
-            'version' => 'v1.0.0',
-            'title' => 'Release Oficial de Produção do MVP — Isolamento, Concorrência e Webhooks',
+            'version' => 'v1.1.0',
             'show_modal' => true,
         ]);
 
@@ -35,7 +34,7 @@ class ReleaseSyncTest extends TestCase
             'show_modal' => false,
         ]);
 
-        $this->assertDatabaseCount('app_releases', 8);
+        $this->assertDatabaseCount('app_releases', 9);
     }
 
     public function test_novidades_page_displays_synced_releases_to_tenant(): void

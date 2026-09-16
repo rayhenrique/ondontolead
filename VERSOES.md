@@ -38,7 +38,35 @@ O comando lê automaticamente o `VERSOES.md`, extrai cada release com título, r
 - Múltiplas agendas e cadeiras odontológicas por clínica.
 - Cobrança de consultas diretamente do paciente via checkout transparente.
 - Chatbot bidirecional no WhatsApp para confirmação e reagendamento automático.
-- Sincronização bidirecional com Google Calendar.
+## v1.1.0 — 2026-09-16
+
+**Status:** Landing Page Institucional modular, redesign completo de autenticação e Painel SuperAdmin com Sidebar concluídos; apta para produção.
+
+### Adicionado
+
+- **Landing Page Institucional e Pública (`welcome.blade.php`):**
+  - Layout dedicado [`LandingLayout`](file:///c:/Users/rayhe/Downloads/ondontolead/app/View/Components/LandingLayout.php) com tipografia Google Fonts (Plus Jakarta Sans e Inter) e Tailwind CSS v4.
+  - 8 componentes anônimos modulares em `resources/views/components/landing/`: Header Glassmorphic com drawer mobile, Hero com mockup CSS flutuante em GSAP, Ticker contínuo Marquee, Comparativo Problema vs. Solução, Jornada do paciente em 4 etapas, Calculadora de ROI reativa em Alpine.js, Cards de Planos e FAQ Accordion.
+  - Destaque em toda a experiência para a oferta de **14 dias de teste grátis sem cartão de crédito**.
+  - Rodapé oficial com menção de copyright e link seguro para a **KL Tecnologia** (`kltecnologia.com`).
+- **Redesign de Autenticação (`/login` e `/register`):**
+  - Alinhamento total com a estética *High-Tech Editorial Light*, glows ambientais, novos campos estilizados e links de retorno seguro.
+- **Painel SuperAdmin com Sidebar Lateral (`/admin`):**
+  - Migração da topbar para barra lateral (Sidebar) fixa no desktop (`w-64`) e drawer deslizante no mobile com Alpine.js.
+  - Novo layout dedicado [`AdminLayout`](file:///c:/Users/rayhe/Downloads/ondontolead/app/View/Components/AdminLayout.php).
+  - Modernização completa dos módulos de Dashboard (KPIs de MRR e agendamentos), Gestão de Clínicas, Planos, Releases e Configurações Globais.
+
+### Validação
+
+- 193 testes automatizados aprovados (0 falhas).
+- Formatação de código alinhada ao Laravel Pint.
+- Build de produção gerado com sucesso pelo Vite.
+
+### Changelog sugerido para `app_releases`
+
+- **Versão:** `v1.1.0`
+- **Título:** Landing Page Institucional, Redesign de Autenticação e SuperAdmin com Sidebar
+- **Resumo:** Nova página inicial de alta conversão com Motion Design em GSAP, calculadora de ROI em Alpine.js, redesign das telas de login/cadastro e painel do SuperAdmin com layout Sidebar responsiva.
 
 ## v1.0.0 — 2026-09-16
 

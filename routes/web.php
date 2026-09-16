@@ -11,10 +11,17 @@ use App\Http\Controllers\Clinic\ClinicDashboardController;
 use App\Http\Controllers\Clinic\ClinicReleaseController;
 use App\Http\Controllers\Clinic\ClinicSettingController;
 use App\Http\Controllers\PublicClinicBookingController;
+use App\Models\Plan;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    try {
+        $plans = Plan::query()->where('is_active', true)->orderBy('price')->get();
+    } catch (Throwable) {
+        $plans = collect();
+    }
+
+    return view('welcome', compact('plans'));
 });
 
 Route::middleware([
