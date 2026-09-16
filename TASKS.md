@@ -27,18 +27,18 @@
   - [x] 5.2 CRUD de Tenants (Clínicas) com funcionalidade de Impersonation.
   - [x] 5.3 CRUD de Planos e tela de Gestão de Novidades (Releases).
 
-- [ ] **Fase 6: Módulo Tenant / Clínica (`/app`)**
-  - [ ] 6.1 Dashboard da clínica.
-  - [ ] 6.2 Componente Livewire de gerenciamento de grade de horário.
-  - [ ] 6.3 Gestão de Agendamentos e configurações (BYOK de IA, slug).
-  - [ ] 6.4 Página `/app/novidades` e componente global de Modal de Changelog.
+- [x] **Fase 6: Módulo Tenant / Clínica (`/app`)**
+  - [x] 6.1 Dashboard da clínica.
+  - [x] 6.2 Componente Livewire de gerenciamento de grade de horário.
+  - [x] 6.3 Gestão de Agendamentos e configurações (BYOK de IA, slug).
+  - [x] 6.4 Página `/app/novidades` e componente global de Modal de Changelog.
 
-- [ ] **Fase 7: Módulo Público e Formulário (`/{slug}`)**
-  - [ ] 7.1 Landing Page da clínica escopada pelo slug.
-  - [ ] 7.2 Formulário Multi-step em Livewire (Dados, Queixa, Retorno da IA, Slots livres).
-  - [ ] 7.3 Conclusão do agendamento disparando redirect para link do WhatsApp com mensagem pronta.
+- [x] **Fase 7: Módulo Público e Formulário (`/{slug}`)**
+  - [x] 7.1 Landing Page da clínica escopada pelo slug.
+  - [x] 7.2 Formulário Multi-step em Livewire (Dados, Queixa, Retorno da IA, Slots livres).
+  - [x] 7.3 Conclusão do agendamento disparando redirect para link do WhatsApp com mensagem pronta.
 
-- [ ] **Fase 8: Testes Automatizados**
-  - [ ] 8.1 Teste de Isolamento de DB: Request do Tenant A não afeta Tenant B.
-  - [ ] 8.2 Teste de Concorrência: Agendamento simultâneo do mesmo horário.
-  - [ ] 8.3 Teste de Webhooks: Idempotência nas assinaturas.
+- [x] **Fase 8: Testes Automatizados**
+  - [x] 8.1 Teste de Isolamento de DB: Request do Tenant A não afeta Tenant B.
+  - [x] 8.2 Teste de Concorrência: Agendamento simultâneo do mesmo horário.
+  - [x] 8.3 Teste de Webhooks: Idempotência nas assinaturas.

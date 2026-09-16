@@ -12,7 +12,7 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    @if (Auth::user()?->is_superadmin)
+                    @if (Auth::user()?->is_superadmin && !request()->routeIs('app.*'))
                         <x-nav-link href="{{ route('admin.dashboard') }}" :active="request()->routeIs('admin.dashboard')">
                             {{ __('Dashboard') }}
                         </x-nav-link>
@@ -28,10 +28,30 @@
                         <x-nav-link href="{{ route('admin.settings.edit') }}" :active="request()->routeIs('admin.settings.*')">
                             {{ __('Configurações') }}
                         </x-nav-link>
+                        <x-nav-link href="{{ route('app.dashboard') }}" :active="false" class="text-indigo-600 font-semibold">
+                            {{ __('Ver App Clínica &rarr;') }}
+                        </x-nav-link>
                     @else
                         <x-nav-link href="{{ route('app.dashboard') }}" :active="request()->routeIs('app.dashboard') || request()->routeIs('dashboard')">
                             {{ __('Dashboard') }}
                         </x-nav-link>
+                        <x-nav-link href="{{ route('app.schedule') }}" :active="request()->routeIs('app.schedule')">
+                            {{ __('Grade & Horários') }}
+                        </x-nav-link>
+                        <x-nav-link href="{{ route('app.appointments.index') }}" :active="request()->routeIs('app.appointments.*')">
+                            {{ __('Agendamentos') }}
+                        </x-nav-link>
+                        <x-nav-link href="{{ route('app.releases.index') }}" :active="request()->routeIs('app.releases.*')">
+                            {{ __('Novidades') }}
+                        </x-nav-link>
+                        <x-nav-link href="{{ route('app.settings.edit') }}" :active="request()->routeIs('app.settings.*')">
+                            {{ __('Configurações') }}
+                        </x-nav-link>
+                        @if (Auth::user()?->is_superadmin)
+                            <x-nav-link href="{{ route('admin.dashboard') }}" :active="false" class="text-amber-600 font-semibold">
+                                {{ __('&larr; Painel Admin') }}
+                            </x-nav-link>
+                        @endif
                     @endif
                 </div>
             </div>
@@ -157,7 +177,7 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            @if (Auth::user()?->is_superadmin)
+            @if (Auth::user()?->is_superadmin && !request()->routeIs('app.*'))
                 <x-responsive-nav-link href="{{ route('admin.dashboard') }}" :active="request()->routeIs('admin.dashboard')">
                     {{ __('Dashboard') }}
                 </x-responsive-nav-link>
@@ -173,10 +193,30 @@
                 <x-responsive-nav-link href="{{ route('admin.settings.edit') }}" :active="request()->routeIs('admin.settings.*')">
                     {{ __('Configurações') }}
                 </x-responsive-nav-link>
+                <x-responsive-nav-link href="{{ route('app.dashboard') }}" :active="false" class="text-indigo-600 font-semibold">
+                    {{ __('Ver App Clínica &rarr;') }}
+                </x-responsive-nav-link>
             @else
                 <x-responsive-nav-link href="{{ route('app.dashboard') }}" :active="request()->routeIs('app.dashboard') || request()->routeIs('dashboard')">
                     {{ __('Dashboard') }}
                 </x-responsive-nav-link>
+                <x-responsive-nav-link href="{{ route('app.schedule') }}" :active="request()->routeIs('app.schedule')">
+                    {{ __('Grade & Horários') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link href="{{ route('app.appointments.index') }}" :active="request()->routeIs('app.appointments.*')">
+                    {{ __('Agendamentos') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link href="{{ route('app.releases.index') }}" :active="request()->routeIs('app.releases.*')">
+                    {{ __('Novidades') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link href="{{ route('app.settings.edit') }}" :active="request()->routeIs('app.settings.*')">
+                    {{ __('Configurações') }}
+                </x-responsive-nav-link>
+                @if (Auth::user()?->is_superadmin)
+                    <x-responsive-nav-link href="{{ route('admin.dashboard') }}" :active="false" class="text-amber-600 font-semibold">
+                        {{ __('&larr; Painel Admin') }}
+                    </x-responsive-nav-link>
+                @endif
             @endif
         </div>
 

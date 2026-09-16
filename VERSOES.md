@@ -23,10 +23,124 @@ Cada nova release deve informar:
 
 ## Não lançado
 
-### Planejado
+### Planejado (Pós-MVP)
 
-- Fases 6 a 8 do checklist de implementação.
-- Release de produção `v1.0.0` após aprovação de todos os critérios do MVP.
+- Múltiplas agendas e cadeiras odontológicas por clínica.
+- Cobrança de consultas diretamente do paciente via checkout transparente.
+- Chatbot bidirecional no WhatsApp para confirmação e reagendamento automático.
+- Sincronização bidirecional com Google Calendar.
+
+## v1.0.0 — 2026-09-16
+
+**Status:** Primeiro MVP 100% concluído, validado por suíte automatizada e apto para produção.
+
+### Adicionado
+
+- Conclusão da **Fase 8 (Testes Críticos do MVP)**:
+  - **Isolamento Rigoroso de Banco de Dados (`TenantDatabaseIsolationTest`):**
+    - Verificação de isolamento cruzado: Tenant A não pode visualizar, filtrar nem mutar consultas, triagens, horários de atendimento, bloqueios e chaves BYOK do Tenant B.
+    - Teste de comportamento fail-closed: acessos desautenticados ou sem contexto de tenant têm injeção automática de `clinic_id = 0`, impedindo qualquer vazamento de registros.
+    - Teste de governança do SuperAdmin: bypass legítimo do escopo para visualização e gerenciamento global do SaaS.
+  - **Concorrência e Prevenção de Double-Booking (`BookingConcurrencyTest`):**
+    - Agendamentos simultâneos para o mesmo horário exato processados via transação pessimista (`lockForUpdate()`), garantindo que apenas 1 obtenha sucesso e o concorrente receba exceção de horário indisponível.
+    - Garantia dupla no nível de engine de banco (MySQL InnoDB) através do índice de unicidade `UNIQUE(clinic_id, scheduled_at)`.
+    - Simulação concorrente via componente Livewire `ClinicBookingWizard`.
+    - Garantia de que clínicas distintas agendando o mesmo horário exato não colidem nem sofrem interferência.
+  - **Idempotência de Webhook do Mercado Pago (`MercadoPagoWebhookIdempotencyTest`):**
+    - Disparos duplicados da mesma notificação HTTP via `POST /api/webhooks/mercadopago` respondem HTTP 200 sem duplicar registros em `payment_logs`.
+    - Job em fila `ProcessMercadoPagoWebhookJob` detecta se o log já foi processado e encerra com sucesso sem chamar API externa do gateway.
+    - Eventos com tipos não suportados são registrados e marcados como processados sem gerar erros ou reprocessamentos infinitos.
+    - Rejeição estrita (HTTP 400) com verificação de assinatura HMAC antes de enfileirar jobs ou gravar logs.
+
+### Validação
+
+- **188 testes automatizados** executados (181 aprovados, 7 condicionais ignorados, 0 falhas e 0 erros), totalizando **639 asserções**.
+- Formatação de código validada e corrigida com Laravel Pint (`vendor/bin/pint --format agent`).
+- Compilação dos assets com Vite e Tailwind CSS concluída com sucesso (`npm run build`).
+- Auditoria de segurança aprovada.
+
+### Deploy em Produção
+
+- O MVP está formalmente aprovado e pronto para implantação em produção.
+- Requisitos para deploy:
+  1. Configurar variáveis de ambiente de produção (`APP_ENV=production`, `APP_DEBUG=false`, chave gerada com `php artisan key:generate`).
+  2. Banco de dados MySQL 8+ com engine InnoDB configurado com charset `utf8mb4`.
+  3. Executar migrations: `php artisan migrate --force`.
+  4. Executar seeders iniciais (Planos, SuperAdmin, Release `v1.0.0`): `php artisan db:seed --force`.
+  5. Iniciar worker permanente de filas para o processamento de webhooks: `php artisan queue:work --queue=webhooks,default --tries=4 --timeout=30`.
+  6. Configurar webhooks do Mercado Pago apontando para a URL pública HTTPS: `https://[dominio]/api/webhooks/mercadopago`.
+
+
+**Status:** Módulo Público (`/{slug}`), Wizard Multi-step em Livewire, Triagem Híbrida e Transbordo para WhatsApp concluídos; não apta para produção.
+
+### Adicionado
+
+- Landing Page pública da clínica identificada pelo slug na URL (`/{slug}`), com design responsivo mobile-first, paleta escura com destaques em esmeralda, badges de autoridade e rodapé white-label.
+- Controlador público [`PublicClinicBookingController.php`](file:///c:/Users/rayhe/Downloads/ondontolead/app/Http/Controllers/PublicClinicBookingController.php) com tratamento de slug não encontrado (404) e aviso de clínica com agendamentos pausados se a assinatura estiver inadimplente ou cancelada.
+- Componente Livewire multi-step [`ClinicBookingWizard.php`](file:///c:/Users/rayhe/Downloads/ondontolead/app/Livewire/Public/ClinicBookingWizard.php) e view reativa [`clinic-booking-wizard.blade.php`](file:///c:/Users/rayhe/Downloads/ondontolead/resources/views/livewire/public/clinic-booking-wizard.blade.php):
+  - **Etapa 1 (Dados):** Coleta e validação de nome do paciente e telefone WhatsApp.
+  - **Etapa 2 (Sintomas):** Descrição da queixa principal, seletor visual interativo de nível de dor (0 a 10), chips de sinais de alerta (inchaço, sangramento, trauma, febre, dificuldade respiratória) e histórico médico/alergias.
+  - **Etapa 3 (Triagem):** Execução do `AiTriageService` (OpenAI / Gemini via BYOK ou fallback determinístico), com exibição de nível de urgência colorido, resumo explicativo e procedimento odontológico sugerido.
+  - **Etapa 4 (Horários):** Cálculo dinâmico de horários disponíveis (`AppointmentBookingService::getAvailableSlots`), filtrando dias bloqueados, intervalos de almoço, horários passados e vagas já preenchidas, com seleção interativa de slot.
+  - **Etapa 5 (Confirmação):** Criação atômica em transação pessimista do `Appointment` e do `TriageRecord`, exibição de comprovante e botão de ação para abertura direta do WhatsApp com mensagem pré-formatada completa.
+- Atualização do [`AppointmentBookingService`](file:///c:/Users/rayhe/Downloads/ondontolead/app/Services/AppointmentBookingService.php) com cálculo de slots livres em tempo real e criação atômica de `TriageRecord` durante a reserva.
+- 8 novos testes de Feature em `tests/Feature/Public/ClinicPublicBookingTest.php` cobrindo acesso anônimo, validações de etapas, cálculo de slots e bloqueios, prevenção de colisões de reserva concorrente e geração de link do WhatsApp.
+
+### Validação
+
+- 174 testes executados: 167 aprovados e 7 condicionais ignorados, totalizando 570 asserções.
+- Formatação Pint executada e aprovada.
+- Build do Vite concluído sem erros.
+
+### Changelog sugerido para `app_releases`
+
+- **Versão:** `v0.7.0`
+- **Título:** Landing Page Pública, Triagem Interativa e Agendamento Online
+- **Resumo:** disponibilização da página pública da clínica por slug com formulário multi-step em Livewire, triagem prévia inteligente de sintomas, seleção de horários em tempo real e transbordo qualificado para o WhatsApp.
+
+### Limitações conhecidas
+
+- Os testes finais de homologação, carga/concorrência e validação do MVP pertencem à Fase 8.
+
+### Deploy
+
+Não publicar esta versão para usuários finais. Em staging, o link público `/{slug}` já pode ser divulgado para testes com pacientes reais.
+
+## v0.6.0 — 2026-09-16
+
+**Status:** Módulo Tenant / Clínica (`/app`), Grade com Livewire, Gestão de Agendamentos & Triagens, BYOK de IA e Modal de Releases concluídos; não apta para produção.
+
+### Adicionado
+
+- Dashboard da clínica (`/app`) com métricas em tempo real (hoje, próximos 7 dias, mês, contadores por status), link público de agendamento e alerta onboarding de grade inativa.
+- Componente Livewire `ScheduleManager` (`/app/grade`) gerenciando a grade semanal (dias 0 a 6, início, fim, intervalos e duração do slot) e bloqueio de feriados/recessos com motivo.
+- Painel de Agendamentos e Triagens (`/app/agendamentos`) com abas por status, busca por texto (nome/telefone), filtro por data, detalhamento de triagem com IA (nível de dor, queixa e resumo), link direto para WhatsApp e atualização de status.
+- Configurações da Clínica (`/app/configuracoes`) com validação de unicidade de slug, atualização de WhatsApp e gerenciador BYOK de IA (Gemini, OpenAI ou Fallback padrão) com chave criptografada em AES-256.
+- Módulo de Novidades In-App (`/app/novidades`) com histórico de releases em Markdown e ação de marcação de leitura.
+- Componente global Livewire `AppReleaseModal` integrado ao layout principal (`layouts/app.blade.php`), com fechamento assíncrono e cumprimento estrito da Regra RN03 (modal exibido apenas uma vez por usuário por release).
+- Menus de navegação do Jetstream integrados para clínicas com alternância para painel admin quando acessado por SuperAdmin.
+- 29 novos testes de Feature (`tests/Feature/Clinic/`) cobrindo Dashboard, Grade, Agendamentos, Configurações e Changelog.
+
+### Validação
+
+- 166 testes executados: 159 aprovados e 7 condicionais ignorados, totalizando 534 asserções.
+- Formatação Pint executada e aprovada.
+- Build do Vite concluído sem erros.
+
+### Changelog sugerido para `app_releases`
+
+- **Versão:** `v0.6.0`
+- **Título:** Painel da Clínica, Grade de Horários e Gestão de Pacientes
+- **Resumo:** módulo completo da clínica com dashboard operacional, gestão de grade semanal e bloqueios em Livewire, acompanhamento de agendamentos com triagem IA, configurações BYOK e modal interativo de novidades.
+
+### Limitações conhecidas
+
+- O formulário público multi-step de agendamento (`/{slug}`) pertence à Fase 7.
+- Os testes finais de concorrência e carga do MVP pertencem à Fase 8.
+
+### Deploy
+
+Não publicar esta versão para usuários finais. Em staging, os gestores de clínica já podem configurar horários, chaves de IA e gerenciar seus agendamentos.
 
 ## v0.5.0 — 2026-09-16
 

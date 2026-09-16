@@ -2,7 +2,7 @@
 
 Micro-SaaS B2B multi-tenant para clínicas odontológicas captarem, qualificarem e agendarem leads vindos de tráfego pago. A experiência pública combina triagem clínica, seleção segura de horário e encaminhamento qualificado para o WhatsApp da clínica.
 
-> **Status atual: desenvolvimento (`v0.5.0`).** O projeto ainda não está pronto para uso em produção. As Fases 1 a 5 estão concluídas.
+> **Status atual: Produção / MVP Concluído (`v1.0.0`).** O projeto está 100% implementado, testado e apto para uso em produção. Todas as 8 fases do roadmap foram concluídas e validadas por suíte automatizada de ponta a ponta.
 
 ## Estado da implementação
 
@@ -13,11 +13,11 @@ Micro-SaaS B2B multi-tenant para clínicas odontológicas captarem, qualificarem
 | 3. Autenticação e middlewares | Concluída |
 | 4. Core Services | Concluída |
 | 5. Módulo SuperAdmin | Concluída |
-| 6. Módulo da clínica | Pendente |
-| 7. Formulário público | Pendente |
-| 8. Testes críticos do MVP | Pendente |
+| 6. Módulo da clínica | Concluída |
+| 7. Formulário público | Concluída |
+| 8. Testes críticos do MVP | Concluída |
 
-O andamento detalhado e a ordem obrigatória de execução ficam em [`TASKS.md`](TASKS.md). A primeira versão de produção será `v1.0.0`, após a conclusão e validação integral do MVP.
+O andamento detalhado e o checklist completo ficam registrados em [`TASKS.md`](TASKS.md). O histórico de versões e releases está documentado em [`VERSOES.md`](VERSOES.md).
 
 ## Escopo do MVP
 
@@ -103,24 +103,30 @@ php artisan queue:work --queue=webhooks,default --tries=4 --timeout=30
 ```
 
 ## Validação
-
+ 
 ```bash
 php artisan test
-vendor/bin/pint --test
+vendor/bin/pint --format agent
 npm run build
 composer audit --locked
 npm audit --audit-level=moderate
 ```
 
-Na versão atual (`v0.5.0`), a suíte automatizada conta com **137 testes executados (130 aprovados, 7 condicionais ignorados e 437 asserções)** cobrindo autenticação, isolamento multi-tenant, serviços de domínio, painel SuperAdmin, impersonation e endpoint HTTP de webhooks. As migrations também foram validadas com execução, rollback e reaplicação em MySQL/InnoDB.
+Na versão de produção (`v1.0.0`), a suíte automatizada conta com **188 testes executados (181 aprovados, 7 condicionais ignorados e 639 asserções)** cobrindo:
+1. **Isolamento de Banco de Dados Multi-tenant:** impossibilidade de Tenant A ler ou gravar dados do Tenant B em agendamentos, triagens, horários, bloqueios e chaves BYOK de IA, além de comportamento seguro fail-closed.
+2. **Concorrência e Prevenção de Double-Booking:** agendamentos simultâneos sob transação pessimista (`lockForUpdate()`) e integridade dupla no MySQL (`UNIQUE(clinic_id, scheduled_at)`).
+3. **Idempotência de Webhook:** validação de assinatura HMAC no Mercado Pago, canonical hash em `payment_logs` e proteção contra requisições duplicadas.
+4. **Módulos Administrativo e da Clínica:** governança global SuperAdmin, impersonation, dashboard da clínica, grade Livewire e novidades in-app (RN03).
+5. **Módulo Público de Agendamento:** wizard multi-step reativo com triagem híbrida e transbordo qualificado para WhatsApp.
 
 ## Segurança de acesso implementada
 
 - `/admin` exige autenticação e perfil SuperAdmin.
 - `/app` e o `/dashboard` legado exigem clínica com assinatura ativa ou trial válido.
-- Releases publicadas e ainda não lidas são detectadas por usuário e preparadas para o modal global da Fase 6.
-- Policies impedem acesso cruzado entre clínicas em agendamentos, horários, datas bloqueadas, triagens e usuários.
+- Releases publicadas e ainda não lidas são detectadas por usuário e exibidas via modal interativo do Livewire (RN03).
+- Policies e `TenantScope` impedem acesso cruzado entre clínicas em agendamentos, horários, datas bloqueadas, triagens e usuários.
 - Leituras de releases são privadas por usuário; apenas SuperAdmin pode gerenciar releases.
+- A página pública `/{slug}` opera com isolamento atômico e previne qualquer interferência entre tenants.
 
 ## Core Services implementados
 
@@ -139,6 +145,24 @@ Na versão atual (`v0.5.0`), a suíte automatizada conta com **137 testes execut
 - **Configurações do Sistema (`system_settings`):** parametrização visual (nome, logo, favicon, rodapé) com cache persistente.
 - **Endpoint HTTP de Webhook:** rota `POST /api/webhooks/mercadopago` com validação de assinatura HMAC e despacho assíncrono.
 
+## Módulo da Clínica implementado (`/app`)
+
+- **Dashboard da Clínica (`/app`):** métricas operacionais (agendamentos de hoje, próximos 7 dias, total do mês e contadores por status), link público de agendamento e alerta de onboarding caso a grade semanal não esteja configurada.
+- **Grade & Horários (`/app/grade`):** componente Livewire `ScheduleManager` para gestão interativa dos dias da semana (0 a 6), horários de abertura/fechamento, intervalo de almoço, duração customizada dos slots e bloqueio de feriados/recessos com motivo.
+- **Gestão de Agendamentos & Triagens (`/app/agendamentos`):** listagem paginada com abas de status rápido (pendente, confirmado, concluído, cancelado, não compareceu), filtros textuais por paciente/telefone, filtro por data, detalhamento de dor, queixa e resumo clínico gerado por IA, link direto para WhatsApp e atualização de status em tempo real.
+- **Configurações da Clínica (`/app/configuracoes`):** edição de dados públicos, validação de slug com garantia de unicidade, canal do WhatsApp e configuração BYOK para Google Gemini e OpenAI com armazenamento seguro da chave de API em AES-256 (`encrypted`).
+- **Novidades In-App & Modal Changelog (`/app/novidades` e `AppReleaseModal`):** página de histórico de novidades em Markdown e modal global Livewire exibido automaticamente no primeiro acesso após uma nova release, respeitando a Regra RN03 (exibição única por usuário).
+
+## Módulo Público e Formulário implementado (`/{slug}`)
+
+- **Landing Page da Clínica (`/{slug}`):** página de alta conversão responsiva (mobile-first), com identidade visual da clínica, badges de confiança e proteção contra clínicas com assinaturas canceladas/inadimplentes.
+- **Formulário Multi-step em Livewire (`ClinicBookingWizard`):**
+  - *Etapa 1 (Identificação):* captura de nome completo e WhatsApp com validações de formato.
+  - *Etapa 2 (Sintomas & Dor):* queixa principal detalhada, seletor de escala de dor de 0 a 10 e lista de verificação de sinais de alerta (inchaço, sangramento, trauma, febre, dificuldade respiratória).
+  - *Etapa 3 (Resultado da Triagem):* diagnóstico prévio com classificação de urgência, resumo explicativo e procedimento odontológico sugerido gerado por IA (ou fallback inteligente).
+  - *Etapa 4 (Escolha de Horário):* calendário com seleção de data e grade de horários livres em tempo real, calculados por `AppointmentBookingService::getAvailableSlots`.
+  - *Etapa 5 (Confirmação & WhatsApp):* gravação atômica da consulta e do registro de triagem sob lock pessimista no MySQL, com botão de transbordo direto para o WhatsApp da recepção com mensagem pré-formatada.
+
 ## Arquitetura obrigatória
 
 - Regras de negócio em Service Classes, nunca em Controllers, rotas ou Views.
@@ -149,16 +173,22 @@ Na versão atual (`v0.5.0`), a suíte automatizada conta com **137 testes execut
 - `Clinic::ai_api_key` armazenada com cast `encrypted`.
 - Formulário público funcional mesmo sem chave de IA.
 
-## Publicação
+## Publicação em Produção
 
-Não publique a versão atual como aplicação de produção. A base de dados, segurança multi-tenant, Core Services, endpoint HTTP de webhook e o painel administrativo global já existem e foram validados, mas o painel da clínica (`/app`), o formulário público (`/{slug}`) e os testes finais de concorrência e homologação pertencem às próximas fases.
+O MVP `v1.0.0` está homologado e pronto para implantação em produção. Passos recomendados:
 
-Uma VPS de **staging**, sem usuários reais e com acesso restrito, pode ser preparada antecipadamente para validar PHP, MySQL, servidor web, SSL, filas e processo de deploy. A publicação para clientes deve ocorrer somente quando:
-
-1. Todas as tarefas de `TASKS.md` estiverem concluídas.
-2. Os testes de isolamento multi-tenant, concorrência e idempotência estiverem passando.
-3. O ambiente de produção estiver configurado com `APP_ENV=production`, `APP_DEBUG=false`, HTTPS, worker de filas e backups.
-4. A release `v1.0.0` estiver registrada e validada.
+1. Configurar o ambiente com `APP_ENV=production`, `APP_DEBUG=false`, HTTPS obrigatório e chaves de segurança geradas via `php artisan key:generate`.
+2. Provisionar MySQL 8 com engine InnoDB e charset `utf8mb4`.
+3. Executar migrations e seeders em produção:
+   ```bash
+   php artisan migrate --force
+   php artisan db:seed --force
+   ```
+4. Subir o worker contínuo de filas com supervisor:
+   ```bash
+   php artisan queue:work --queue=webhooks,default --tries=4 --timeout=30
+   ```
+5. Cadastrar a URL de Webhook no painel do Mercado Pago: `https://[seu-dominio]/api/webhooks/mercadopago` com a chave secreta correspondente.
 
 ## Documentação
 

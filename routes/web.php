@@ -6,6 +6,11 @@ use App\Http\Controllers\Admin\ClinicManagementController;
 use App\Http\Controllers\Admin\ImpersonationController;
 use App\Http\Controllers\Admin\PlanManagementController;
 use App\Http\Controllers\Admin\SystemSettingController;
+use App\Http\Controllers\Clinic\AppointmentManagementController;
+use App\Http\Controllers\Clinic\ClinicDashboardController;
+use App\Http\Controllers\Clinic\ClinicReleaseController;
+use App\Http\Controllers\Clinic\ClinicSettingController;
+use App\Http\Controllers\PublicClinicBookingController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -20,12 +25,26 @@ Route::middleware([
     Route::post('/admin/impersonate/leave', [ImpersonationController::class, 'leave'])->name('admin.impersonate.leave');
 
     Route::get('/dashboard', function () {
-        return view('dashboard');
+        if (auth()->user()?->is_superadmin) {
+            return redirect()->route('admin.dashboard');
+        }
+
+        return redirect()->route('app.dashboard');
     })->middleware(['tenant.subscription', 'releases.unread'])->name('dashboard');
 
-    Route::view('/app', 'dashboard')
-        ->middleware(['tenant.subscription', 'releases.unread'])
-        ->name('app.dashboard');
+    Route::middleware(['tenant.subscription', 'releases.unread'])
+        ->prefix('app')
+        ->name('app.')
+        ->group(function () {
+            Route::get('/', ClinicDashboardController::class)->name('dashboard');
+            Route::view('/grade', 'clinic.schedule')->name('schedule');
+            Route::get('/agendamentos', [AppointmentManagementController::class, 'index'])->name('appointments.index');
+            Route::patch('/agendamentos/{appointment}/status', [AppointmentManagementController::class, 'updateStatus'])->name('appointments.status');
+            Route::get('/configuracoes', [ClinicSettingController::class, 'edit'])->name('settings.edit');
+            Route::put('/configuracoes', [ClinicSettingController::class, 'update'])->name('settings.update');
+            Route::get('/novidades', [ClinicReleaseController::class, 'index'])->name('releases.index');
+            Route::post('/novidades/{release}/read', [ClinicReleaseController::class, 'markAsRead'])->name('releases.read');
+        });
 
     Route::middleware(['superadmin', 'releases.unread'])
         ->prefix('admin')
@@ -53,3 +72,7 @@ Route::middleware([
             Route::put('/settings', [SystemSettingController::class, 'update'])->name('settings.update');
         });
 });
+
+Route::get('/{slug}', PublicClinicBookingController::class)
+    ->where('slug', '^[a-z0-9]+(?:-[a-z0-9]+)*$')
+    ->name('clinic.public');

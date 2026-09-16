@@ -53,6 +53,8 @@
             </main>
         </div>
 
+        @livewire('app-release-modal')
+
         @stack('modals')
 
         @livewireScripts

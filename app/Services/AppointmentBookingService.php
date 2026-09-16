@@ -7,6 +7,9 @@ use App\Models\Appointment;
 use App\Models\Clinic;
 use App\Models\ClinicBlockedDate;
 use App\Models\ClinicSchedule;
+use App\Models\TriageRecord;
+use App\Services\Ai\Data\TriageInput;
+use App\Services\Ai\Data\TriageResult;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterface;
 use Illuminate\Database\UniqueConstraintViolationException;
@@ -20,6 +23,8 @@ class AppointmentBookingService
         string $patientName,
         string $patientPhone,
         ?string $notes = null,
+        ?TriageResult $triageResult = null,
+        ?TriageInput $triageInput = null,
     ): Appointment {
         $slotStartsAt = CarbonImmutable::instance($scheduledAt)
             ->setTimezone(config('app.timezone'));
@@ -31,6 +36,8 @@ class AppointmentBookingService
                 $patientName,
                 $patientPhone,
                 $notes,
+                $triageResult,
+                $triageInput,
             ): Appointment {
                 Clinic::query()
                     ->whereKey($clinic->getKey())
@@ -53,7 +60,7 @@ class AppointmentBookingService
                 $this->ensureDateIsNotBlocked($clinic, $slotStartsAt);
                 $this->ensureSlotIsFree($clinic, $slotStartsAt);
 
-                return Appointment::withoutGlobalScopes()->create([
+                $appointment = Appointment::withoutGlobalScopes()->create([
                     'clinic_id' => $clinic->getKey(),
                     'patient_name' => $patientName,
                     'patient_phone' => $patientPhone,
@@ -61,6 +68,15 @@ class AppointmentBookingService
                     'status' => 'pending',
                     'notes' => $notes,
                 ]);
+
+                if ($triageResult !== null && $triageInput !== null) {
+                    TriageRecord::create(array_merge(
+                        $triageResult->toTriageRecordAttributes($triageInput),
+                        ['appointment_id' => $appointment->id]
+                    ));
+                }
+
+                return $appointment;
             }, 3);
         } catch (UniqueConstraintViolationException $exception) {
             throw new SlotUnavailableException(
@@ -68,6 +84,83 @@ class AppointmentBookingService
                 previous: $exception,
             );
         }
+    }
+
+    /**
+     * Retorna os horários disponíveis ('H:i') para a clínica na data especificada.
+     *
+     * @return list<string>
+     */
+    public function getAvailableSlots(Clinic $clinic, CarbonInterface $date): array
+    {
+        $dateImmutable = CarbonImmutable::instance($date)->setTimezone(config('app.timezone'));
+
+        $isBlocked = ClinicBlockedDate::withoutGlobalScopes()
+            ->where('clinic_id', $clinic->getKey())
+            ->whereDate('blocked_date', $dateImmutable->toDateString())
+            ->exists();
+
+        if ($isBlocked) {
+            return [];
+        }
+
+        $schedule = ClinicSchedule::withoutGlobalScopes()
+            ->where('clinic_id', $clinic->getKey())
+            ->where('day_of_week', $dateImmutable->dayOfWeek)
+            ->where('is_active', true)
+            ->first();
+
+        if ($schedule === null || $schedule->slot_duration_minutes <= 0) {
+            return [];
+        }
+
+        $scheduleStartsAt = $this->atScheduleTime($dateImmutable, $schedule->start_time);
+        $scheduleEndsAt = $this->atScheduleTime($dateImmutable, $schedule->end_time);
+
+        $breakStartsAt = ! empty($schedule->break_start) ? $this->atScheduleTime($dateImmutable, $schedule->break_start) : null;
+        $breakEndsAt = ! empty($schedule->break_end) ? $this->atScheduleTime($dateImmutable, $schedule->break_end) : null;
+
+        $bookedSlots = Appointment::withoutGlobalScopes()
+            ->where('clinic_id', $clinic->getKey())
+            ->whereDate('scheduled_at', $dateImmutable->toDateString())
+            ->where('status', '!=', 'canceled')
+            ->pluck('scheduled_at')
+            ->map(fn ($dt) => CarbonImmutable::parse($dt)->format('H:i'))
+            ->flip()
+            ->all();
+
+        $now = CarbonImmutable::now(config('app.timezone'));
+        $duration = $schedule->slot_duration_minutes;
+        $slots = [];
+
+        $currentSlot = $scheduleStartsAt;
+        while ($currentSlot->addMinutes($duration)->lessThanOrEqualTo($scheduleEndsAt)) {
+            $slotEndsAt = $currentSlot->addMinutes($duration);
+            $timeString = $currentSlot->format('H:i');
+
+            if ($currentSlot->lessThanOrEqualTo($now)) {
+                $currentSlot = $slotEndsAt;
+
+                continue;
+            }
+
+            $inBreak = false;
+            if ($breakStartsAt !== null && $breakEndsAt !== null) {
+                if ($currentSlot->lessThan($breakEndsAt) && $slotEndsAt->greaterThan($breakStartsAt)) {
+                    $inBreak = true;
+                }
+            }
+
+            $isBooked = isset($bookedSlots[$timeString]);
+
+            if (! $inBreak && ! $isBooked) {
+                $slots[] = $timeString;
+            }
+
+            $currentSlot = $slotEndsAt;
+        }
+
+        return $slots;
     }
 
     private function ensureFutureSlot(CarbonImmutable $slotStartsAt): void

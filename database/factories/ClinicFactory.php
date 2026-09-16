@@ -39,6 +39,14 @@ class ClinicFactory extends Factory
         ]);
     }
 
+    public function trial(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'subscription_status' => 'trial',
+            'trial_ends_at' => now()->addDays(14),
+        ]);
+    }
+
     public function pastDue(): static
     {
         return $this->state(fn (array $attributes): array => [
