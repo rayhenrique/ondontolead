@@ -81,4 +81,32 @@ class AppReleaseManagementTest extends TestCase
         $response->assertRedirect('/admin/releases');
         $this->assertDatabaseMissing('app_releases', ['id' => $release->id]);
     }
+
+    public function test_superadmin_releases_are_listed_in_descending_order_with_most_recent_first(): void
+    {
+        $superAdmin = User::factory()->superAdmin()->create();
+
+        $older = AppRelease::factory()->create([
+            'version' => 'v1.0.0',
+            'title' => 'Release Legado',
+            'released_at' => now()->subDays(10),
+        ]);
+
+        $newer = AppRelease::factory()->create([
+            'version' => 'v2.0.0',
+            'title' => 'Release de Vanguarda',
+            'released_at' => now()->subDay(),
+        ]);
+
+        $response = $this->actingAs($superAdmin)->get('/admin/releases');
+        $response->assertOk();
+
+        $content = $response->getContent();
+        $newerPos = strpos($content, 'Release de Vanguarda');
+        $olderPos = strpos($content, 'Release Legado');
+
+        $this->assertNotFalse($newerPos);
+        $this->assertNotFalse($olderPos);
+        $this->assertLessThan($olderPos, $newerPos, 'A release mais recente deve aparecer antes da release mais antiga.');
+    }
 }

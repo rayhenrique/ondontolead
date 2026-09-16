@@ -29,7 +29,7 @@ class ReleaseSyncService
         $synced = [];
         $isFirst = true;
 
-        foreach ($matches as $match) {
+        foreach ($matches as $index => $match) {
             $version = $match[1];
             $dateString = $match[2];
             $body = trim($match[3]);
@@ -65,7 +65,9 @@ class ReleaseSyncService
             $showModal = $isFirst;
             $isFirst = false;
 
-            $releaseDate = Carbon::createFromFormat('Y-m-d', $dateString)->startOfDay();
+            $totalMatches = count($matches);
+            $offsetMinutes = $totalMatches - $index;
+            $releaseDate = Carbon::createFromFormat('Y-m-d', $dateString)->startOfDay()->addMinutes($offsetMinutes);
 
             AppRelease::query()->updateOrCreate(
                 ['version' => $version],

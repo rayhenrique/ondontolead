@@ -24,6 +24,7 @@ class ClinicReleaseController extends Controller
                 $query->where('user_id', $user->id);
             }])
             ->orderByDesc('released_at')
+            ->orderByDesc('id')
             ->paginate(10);
 
         return view('clinic.releases.index', compact('releases'));

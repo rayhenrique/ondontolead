@@ -16,6 +16,7 @@ class AppReleaseManagementController extends Controller
         $releases = AppRelease::query()
             ->withCount('userReleaseReads')
             ->orderByDesc('released_at')
+            ->orderByDesc('id')
             ->paginate(15);
 
         return view('admin.releases.index', compact('releases'));

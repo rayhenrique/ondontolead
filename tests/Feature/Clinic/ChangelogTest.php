@@ -115,4 +115,33 @@ class ChangelogTest extends TestCase
             ->assertSet('isOpen', false)
             ->assertSet('releaseId', null);
     }
+
+    public function test_releases_are_listed_in_descending_order_with_most_recent_first(): void
+    {
+        $clinic = Clinic::factory()->active()->create();
+        $user = User::factory()->tenant($clinic)->create();
+
+        $older = AppRelease::factory()->create([
+            'version' => 'v1.0.0',
+            'title' => 'Versão Mais Antiga',
+            'released_at' => Carbon::now()->subDays(5),
+        ]);
+
+        $newer = AppRelease::factory()->create([
+            'version' => 'v2.0.0',
+            'title' => 'Versão Mais Recente',
+            'released_at' => Carbon::now()->subDay(),
+        ]);
+
+        $response = $this->actingAs($user)->get('/app/novidades');
+        $response->assertOk();
+
+        $content = $response->getContent();
+        $newerPos = strpos($content, 'Versão Mais Recente');
+        $olderPos = strpos($content, 'Versão Mais Antiga');
+
+        $this->assertNotFalse($newerPos);
+        $this->assertNotFalse($olderPos);
+        $this->assertLessThan($olderPos, $newerPos, 'A versão mais recente deve aparecer antes da versão mais antiga na página.');
+    }
 }
