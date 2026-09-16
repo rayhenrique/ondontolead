@@ -63,7 +63,7 @@ class ClinicManagementController extends Controller
         DB::transaction(function () use ($validated): void {
             $trialDays = isset($validated['trial_days']) && $validated['trial_days'] !== null
                 ? (int) $validated['trial_days']
-                : null;
+                : ($validated['subscription_status'] === 'trial' ? 14 : null);
 
             $trialEndsAt = $trialDays !== null
                 ? Carbon::now()->addDays($trialDays)

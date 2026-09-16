@@ -61,6 +61,10 @@ O comando lê automaticamente o `VERSOES.md`, extrai cada release com título, r
     - Job em fila `ProcessMercadoPagoWebhookJob` detecta se o log já foi processado e encerra com sucesso sem chamar API externa do gateway.
     - Eventos com tipos não suportados são registrados e marcados como processados sem gerar erros ou reprocessamentos infinitos.
     - Rejeição estrita (HTTP 400) com verificação de assinatura HMAC antes de enfileirar jobs ou gravar logs.
+  - **Período de Testes Gratuito (Trial de 14 Dias Sem Cartão):**
+    - Novas clínicas cadastradas recebem automaticamente 14 dias de acesso irrestrito a todos os recursos da plataforma, sem necessidade de informar cartão de crédito no momento do cadastro.
+    - Banner informativo com contador de dias restantes e aviso no painel da clínica (`/app`).
+    - Formulário público de registro (`/register`) com auto-provisionamento de clínica e landing page (`welcome.blade.php`) destacando a oferta de 14 dias grátis.
 
 ### Validação
 

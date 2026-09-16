@@ -72,8 +72,8 @@
 
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Duração do Trial (dias)</label>
-                                <input type="number" name="trial_days" value="{{ old('trial_days', 7) }}" min="0" max="365" class="w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
-                                <p class="text-xs text-gray-500 mt-1">Calcula automaticamente a expiração do trial a partir de hoje.</p>
+                                <input type="number" name="trial_days" value="{{ old('trial_days', 14) }}" min="0" max="365" class="w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
+                                <p class="text-xs text-gray-500 mt-1">Padrão: 14 dias de teste grátis (sem necessidade de cartão de crédito).</p>
                                 @error('trial_days') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
                             </div>
                         </div>

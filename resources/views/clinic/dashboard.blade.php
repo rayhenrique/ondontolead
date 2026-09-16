@@ -43,6 +43,35 @@
                 </div>
             @endif
 
+            <!-- Trial Banner (14 dias grátis sem cartão de crédito) -->
+            @if ($clinic->subscription_status === 'trial')
+                @php
+                    $daysRemaining = $clinic->trial_ends_at ? max(0, (int) now()->diffInDays($clinic->trial_ends_at, false)) : 14;
+                @endphp
+                <div class="p-4 bg-gradient-to-r from-indigo-50 via-purple-50 to-indigo-50 border border-indigo-200 rounded-xl shadow-xs flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-indigo-600 text-white rounded-xl flex items-center justify-center font-bold text-sm shrink-0 shadow-sm">
+                            {{ $daysRemaining }}d
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-sm text-indigo-950 flex items-center gap-2">
+                                <span>Período de Testes Gratuito (Trial)</span>
+                                <span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-bold uppercase rounded-md">Sem Cartão de Crédito</span>
+                            </h4>
+                            <p class="text-xs text-indigo-700 mt-0.5">
+                                Sua clínica pode usar todos os recursos de triagem e agendamento gratuitamente por 14 dias.
+                                @if ($clinic->trial_ends_at)
+                                    Expira em {{ $clinic->trial_ends_at->format('d/m/Y') }} (restam {{ $daysRemaining }} dia{{ $daysRemaining === 1 ? '' : 's' }}).
+                                @endif
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs text-indigo-600 font-medium hidden sm:inline">Aproveite para configurar sua grade e receber agendamentos!</span>
+                    </div>
+                </div>
+            @endif
+
             <!-- Onboarding Alert if schedule is missing -->
             @if (! $hasSchedule)
                 <div class="p-5 bg-amber-50 border-l-4 border-amber-500 rounded-lg shadow-xs flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

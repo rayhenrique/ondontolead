@@ -27,6 +27,7 @@ O andamento detalhado e o checklist completo ficam registrados em [`TASKS.md`](T
 - Triagem híbrida: IA quando houver chave configurada e fallback determinístico quando não houver.
 - Banco único com isolamento rigoroso por tenant.
 - Prevenção de agendamentos duplicados por transação, bloqueio pessimista e índice único.
+- Período de testes gratuito (trial) de 14 dias sem exigência de cartão de crédito para novas clínicas cadastradas.
 
 Não fazem parte do MVP: múltiplas agendas por clínica, cobrança do paciente, chatbot bidirecional no WhatsApp e sincronização com Google Calendar.
 

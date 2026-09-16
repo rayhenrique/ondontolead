@@ -46,3 +46,4 @@ O **OdontoLead AI** é um micro-SaaS multi-tenant B2B desenvolvido para clínica
 - **RN01:** O slug da clínica deve ser único globalmente.
 - **RN02:** Um slot de agendamento não pode ser duplicado (`UNIQUE(clinic_id, scheduled_at)`).
 - **RN03:** O modal de novidades só deve ser exibido uma vez por usuário para cada release publicada.
+- **RN04:** Toda nova clínica tem direito a 14 dias de teste grátis (trial) sem exigência de cartão de crédito. Durante esse período, o acesso a todos os módulos, triagens e agendamentos é integral. Após os 14 dias, o acesso é bloqueado até a assinatura de um plano via Mercado Pago.
