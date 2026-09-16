@@ -38,6 +38,45 @@ O comando lê automaticamente o `VERSOES.md`, extrai cada release com título, r
 - Múltiplas agendas e cadeiras odontológicas por clínica.
 - Cobrança de consultas diretamente do paciente via checkout transparente.
 - Chatbot bidirecional no WhatsApp para confirmação e reagendamento automático.
+## v1.2.0 — 2026-09-16
+
+**Status:** Redesign completo do Portal da Clínica (/app) com Sidebar Lateral e estética High-Tech Editorial Light; apta para produção.
+
+### Adicionado
+
+- **Novo Layout do Tenant com Sidebar Lateral (`layouts/app.blade.php`):**
+  - Barra lateral fixa no desktop (`w-64`) e gaveta retrátil no mobile com Alpine.js.
+  - Identidade visual OdontoLead AI com gradiente tecnológico e identificação da clínica ativa.
+  - Indicador dinâmico de status da assinatura com destaque para o **Trial Gratuito de 14 dias sem cartão de crédito** e contador de dias restantes.
+  - Navegação completa por ícones: Dashboard Geral, Agendamentos & Triagens, Grade de Atendimento, Configurações e Novidades.
+  - Atalho com link direto para a página pública de agendamento da clínica (`/{slug}`).
+  - Botão de alternância rápida para o Painel SuperAdmin quando o usuário logado tem privilégios de administrador.
+  - Topbar com chips de status em tempo real (número de WhatsApp conectado e provedor de IA BYOK) e banner moderno de personificação em vidro fosco âmbar.
+- **Modernização do Dashboard da Clínica (`/app`):**
+  - Caixa de link público com botão de cópia instantânea com feedback no clipboard.
+  - Card de destaque para o período de testes gratuito de 14 dias sem cartão de crédito.
+  - Alerta de onboarding de grade de horários não configurada.
+  - Grid de 4 KPIs: Agendados Hoje, Próximos 7 Dias, Total do Mês e balanço de Pendentes/Concluídos.
+  - Tabela de Próximos Pacientes com badges de data/hora, link direto com um clique para WhatsApp Web, queixa e resumo da triagem com etiquetas de urgência (Alta, Média, Baixa), dor e botões de ação rápida (*Confirmar* / *Concluir*).
+- **Redesign dos Módulos da Clínica:**
+  - **Agendamentos & Triagens (`/app/agendamentos`):** Filtros em abas com contadores por status, busca por paciente/telefone e detalhes de triagem semântica pela IA.
+  - **Grade de Atendimento (`/app/grade`):** Interface moderna para dias da semana, turnos de expediente, intervalos e bloqueio de feriados/recessos.
+  - **Configurações da Clínica (`/app/configuracoes`):** Formulário em cards para dados da clínica, slug, WhatsApp e motor de IA BYOK (Gemini, OpenAI ou Fallback) com chave criptografada.
+  - **Novidades & Versões (`/app/novidades`):** Visual refinado do changelog com etiquetas de versão e botão de confirmação de leitura.
+
+### Validação
+
+- 193 testes automatizados executados e 100% aprovados (`php artisan test --compact`).
+- Isolamento multi-tenant e regras de negócio de agendamento e triagem íntegras.
+- Compilação de assets de produção com Vite (`npm run build`).
+- Formatação de código validada via Laravel Pint.
+
+### Changelog sugerido para `app_releases`
+
+- **Versão:** `v1.2.0`
+- **Título:** Redesign do Portal da Clínica (/app) com Sidebar Lateral e High-Tech Design
+- **Resumo:** Nova experiência do aplicativo da clínica com navegação por Sidebar retrátil, cards de KPIs com micro-interações, tabela de pacientes com triagem IA e WhatsApp direto, e telas de agendamentos, grade e configurações harmonizadas.
+
 ## v1.1.0 — 2026-09-16
 
 **Status:** Landing Page Institucional modular, redesign completo de autenticação e Painel SuperAdmin com Sidebar concluídos; apta para produção.

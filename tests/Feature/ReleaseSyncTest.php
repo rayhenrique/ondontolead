@@ -14,11 +14,11 @@ class ReleaseSyncTest extends TestCase
     public function test_sync_command_synchronizes_releases_from_markdown(): void
     {
         $this->artisan('releases:sync')
-            ->expectsOutputToContain('Total de 9 releases sincronizadas com sucesso')
+            ->expectsOutputToContain('Total de 10 releases sincronizadas com sucesso')
             ->assertSuccessful();
 
         $this->assertDatabaseHas('app_releases', [
-            'version' => 'v1.1.0',
+            'version' => 'v1.2.0',
             'show_modal' => true,
         ]);
 
@@ -34,7 +34,7 @@ class ReleaseSyncTest extends TestCase
             'show_modal' => false,
         ]);
 
-        $this->assertDatabaseCount('app_releases', 9);
+        $this->assertDatabaseCount('app_releases', 10);
     }
 
     public function test_novidades_page_displays_synced_releases_to_tenant(): void
