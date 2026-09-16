@@ -135,4 +135,6 @@ Uma VPS de **staging**, sem usuários reais e com acesso restrito, pode ser prep
 
 ## Licença
 
-Ainda não foi definida uma licença específica para o produto. O framework Laravel e suas dependências mantêm suas respectivas licenças.
+O OdontoLead AI é um software proprietário da [KL Tecnologia](https://kltecnologia.com). Todos os direitos são reservados e nenhuma permissão de uso, cópia, modificação ou distribuição é concedida sem autorização prévia e expressa da titular.
+
+Consulte o arquivo [`LICENSE`](LICENSE) para os termos aplicáveis ao projeto. O framework Laravel e as demais dependências de terceiros permanecem sujeitos às suas respectivas licenças.

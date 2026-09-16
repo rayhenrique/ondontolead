@@ -23,6 +23,10 @@ Cada nova release deve informar:
 
 ## Não lançado
 
+### Ajustado
+
+- Licenciamento proprietário formalizado em nome da KL Tecnologia, com atualização do `README.md`, metadados do Composer e arquivo `LICENSE`.
+
 ### Planejado
 
 - Fases 4 a 8 do checklist de implementação.
