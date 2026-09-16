@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Middleware\CheckUnreadReleases;
+use App\Http\Middleware\IsSuperAdmin;
+use App\Http\Middleware\TenantSubscription;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -13,7 +16,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->alias([
+            'releases.unread' => CheckUnreadReleases::class,
+            'superadmin' => IsSuperAdmin::class,
+            'tenant.subscription' => TenantSubscription::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

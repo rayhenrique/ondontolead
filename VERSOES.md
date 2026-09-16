@@ -25,8 +25,46 @@ Cada nova release deve informar:
 
 ### Planejado
 
-- Fases 3 a 8 do checklist de implementação.
+- Fases 4 a 8 do checklist de implementação.
 - Release de produção `v1.0.0` após aprovação de todos os critérios do MVP.
+
+## v0.3.0 — 2026-09-15
+
+**Status:** autenticação, bloqueio por assinatura e autorização multi-tenant concluídos; não apta para produção.
+
+### Adicionado
+
+- Middleware `IsSuperAdmin` e rota protegida `/admin`.
+- Middleware `TenantSubscription` em `/app` e no `/dashboard` legado, com suporte a assinatura ativa, trial vigente e bypass de SuperAdmin.
+- Middleware `CheckUnreadReleases`, que seleciona a release publicada mais recente ainda não lida pelo usuário e disponibiliza seu ID na sessão.
+- Rotas-base nomeadas `admin.dashboard` e `app.dashboard` para os módulos das próximas fases.
+- Policies para clínicas, agendamentos, horários, datas bloqueadas, triagens, usuários, releases e recibos de leitura.
+- Bypass centralizado de Policies para SuperAdmin e negação explícita de acesso entre tenants.
+- Testes de autenticação, assinatura, detecção de releases e matriz de permissões.
+
+### Validação
+
+- 76 testes executados: 69 aprovados e 7 condicionais ignorados, totalizando 210 asserções.
+- Rotas `/admin`, `/app` e `/dashboard` verificadas com seus middlewares.
+- Formatação Pint aprovada.
+- Auditoria Composer sem vulnerabilidades conhecidas.
+
+### Changelog sugerido para `app_releases`
+
+- **Versão:** `v0.3.0`
+- **Título:** Segurança de acesso e isolamento por clínica
+- **Resumo:** proteção das áreas administrativa e da clínica, bloqueio por situação da assinatura e detecção individual de novidades.
+
+### Limitações conhecidas
+
+- As rotas protegidas ainda exibem a tela-base; os painéis completos pertencem às Fases 5 e 6.
+- O modal visual de novidades será implementado na Fase 6.4.
+- Serviços transacionais, triagem e webhook da Fase 4 ainda não implementados.
+- Formulário público e testes críticos finais do MVP ainda pendentes.
+
+### Deploy
+
+Não publicar esta versão para usuários reais. Uso permitido somente em desenvolvimento local ou staging restrito.
 
 ## v0.2.0 — 2026-09-15
 

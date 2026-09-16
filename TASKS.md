@@ -11,11 +11,11 @@
   - [x] 2.2 Configurar Models e `$fillable`. Cast de `ai_api_key` em `Clinic` para `encrypted`.
   - [x] 2.3 Implementar relacionamentos do Eloquent e factory states.
 
-- [ ] **Fase 3: Autenticação e Middlewares**
-  - [ ] 3.1 Middleware `IsSuperAdmin` protegendo a rota `/admin`.
-  - [ ] 3.2 Middleware `TenantSubscription` limitando acesso a clínicas bloqueadas.
-  - [ ] 3.3 Middleware `CheckUnreadReleases` detectando novas atualizações para disparar o modal via Livewire.
-  - [ ] 3.4 Policies para garantir que Tenant A não acesse dados do Tenant B.
+- [x] **Fase 3: Autenticação e Middlewares**
+  - [x] 3.1 Middleware `IsSuperAdmin` protegendo a rota `/admin`.
+  - [x] 3.2 Middleware `TenantSubscription` limitando acesso a clínicas bloqueadas.
+  - [x] 3.3 Middleware `CheckUnreadReleases` detectando novas atualizações para disparar o modal via Livewire.
+  - [x] 3.4 Policies para garantir que Tenant A não acesse dados do Tenant B.
 
 - [ ] **Fase 4: Core Services**
   - [ ] 4.1 `AppointmentBookingService`: Uso de `DB::transaction()` e bloqueio pessimista para agendamentos.

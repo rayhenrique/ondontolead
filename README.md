@@ -2,7 +2,7 @@
 
 Micro-SaaS B2B multi-tenant para clínicas odontológicas captarem, qualificarem e agendarem leads vindos de tráfego pago. A experiência pública combina triagem clínica, seleção segura de horário e encaminhamento qualificado para o WhatsApp da clínica.
 
-> **Status atual: desenvolvimento (`v0.2.0`).** O projeto ainda não está pronto para uso em produção. As Fases 1 e 2 estão concluídas.
+> **Status atual: desenvolvimento (`v0.3.0`).** O projeto ainda não está pronto para uso em produção. As Fases 1, 2 e 3 estão concluídas.
 
 ## Estado da implementação
 
@@ -10,7 +10,7 @@ Micro-SaaS B2B multi-tenant para clínicas odontológicas captarem, qualificarem
 | --- | --- |
 | 1. Setup e base de dados | Concluída |
 | 2. Models, tenancy e scopes | Concluída |
-| 3. Autenticação e middlewares | Pendente |
+| 3. Autenticação e middlewares | Concluída |
 | 4. Core Services | Pendente |
 | 5. Módulo SuperAdmin | Pendente |
 | 6. Módulo da clínica | Pendente |
@@ -96,6 +96,14 @@ npm audit --audit-level=moderate
 
 Na versão atual, as migrations também foram validadas com execução, rollback e reaplicação em MySQL/InnoDB.
 
+## Segurança de acesso implementada
+
+- `/admin` exige autenticação e perfil SuperAdmin.
+- `/app` e o `/dashboard` legado exigem clínica com assinatura ativa ou trial válido.
+- Releases publicadas e ainda não lidas são detectadas por usuário e preparadas para o modal global da Fase 6.
+- Policies impedem acesso cruzado entre clínicas em agendamentos, horários, datas bloqueadas, triagens e usuários.
+- Leituras de releases são privadas por usuário; apenas SuperAdmin pode gerenciar releases.
+
 ## Arquitetura obrigatória
 
 - Regras de negócio em Service Classes, nunca em Controllers, rotas ou Views.
@@ -108,7 +116,7 @@ Na versão atual, as migrations também foram validadas com execução, rollback
 
 ## Publicação
 
-Não publique a versão atual como aplicação de produção. Ainda não existem as proteções de tenancy, os serviços críticos, os painéis, o formulário público nem os testes de isolamento e concorrência exigidos pelo MVP.
+Não publique a versão atual como aplicação de produção. As proteções básicas de autenticação, assinatura e autorização multi-tenant já existem, mas os serviços críticos, os painéis, o formulário público e os testes finais de concorrência e idempotência ainda não foram implementados.
 
 Uma VPS de **staging**, sem usuários reais e com acesso restrito, pode ser preparada antecipadamente para validar PHP, MySQL, servidor web, SSL, filas e processo de deploy. A publicação para clientes deve ocorrer somente quando:
 

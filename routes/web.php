@@ -13,5 +13,13 @@ Route::middleware([
 ])->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
-    })->name('dashboard');
+    })->middleware(['tenant.subscription', 'releases.unread'])->name('dashboard');
+
+    Route::view('/admin', 'dashboard')
+        ->middleware(['superadmin', 'releases.unread'])
+        ->name('admin.dashboard');
+
+    Route::view('/app', 'dashboard')
+        ->middleware(['tenant.subscription', 'releases.unread'])
+        ->name('app.dashboard');
 });
