@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Clinic;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -25,6 +26,7 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
+            'clinic_id' => null,
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
@@ -33,6 +35,7 @@ class UserFactory extends Factory
             'two_factor_recovery_codes' => null,
             'remember_token' => Str::random(10),
             'profile_photo_path' => null,
+            'is_superadmin' => false,
         ];
     }
 
@@ -52,5 +55,21 @@ class UserFactory extends Factory
     public function withPersonalTeam(?callable $callback = null): static
     {
         return $this->state([]);
+    }
+
+    public function tenant(?Clinic $clinic = null): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'clinic_id' => $clinic?->id ?? Clinic::factory(),
+            'is_superadmin' => false,
+        ]);
+    }
+
+    public function superAdmin(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'clinic_id' => null,
+            'is_superadmin' => true,
+        ]);
     }
 }

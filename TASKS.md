@@ -1,15 +1,15 @@
 # Checklist de Execução Sequencial - OdontoLead AI
 
-- [ ] **Fase 1: Setup e Base de Dados (Laravel 13.x)**
+- [x] **Fase 1: Setup e Base de Dados (Laravel 13.x)**
   - [x] 1.1 Iniciar projeto Laravel com Livewire v3 e Breeze/Jetstream.
   - [x] 1.2 Configurar `.env` e conexão MySQL.
   - [x] 1.3 Criar Migrations estritamente na ordem das dependências: `plans`, `clinics`, `users`, tabelas da agenda, `app_releases`, configurações.
-  - [ ] 1.4 Criar Seeders (Planos iniciais, SuperAdmin, Primeira Release `v1.0.0`).
+  - [x] 1.4 Criar Seeders (Planos iniciais, SuperAdmin, Primeira Release `v1.0.0`).
 
-- [ ] **Fase 2: Models, Tenancy e Scopes**
-  - [ ] 2.1 Criar Trait `BelongsToTenant` com `TenantScope` baseado na session/auth.
-  - [ ] 2.2 Configurar Models e `$fillable`. Cast de `ai_api_key` em `Clinic` para `encrypted`.
-  - [ ] 2.3 Implementar relacionamentos do Eloquent e factory states.
+- [x] **Fase 2: Models, Tenancy e Scopes**
+  - [x] 2.1 Criar Trait `BelongsToTenant` com `TenantScope` baseado na session/auth.
+  - [x] 2.2 Configurar Models e `$fillable`. Cast de `ai_api_key` em `Clinic` para `encrypted`.
+  - [x] 2.3 Implementar relacionamentos do Eloquent e factory states.
 
 - [ ] **Fase 3: Autenticação e Middlewares**
   - [ ] 3.1 Middleware `IsSuperAdmin` protegendo a rota `/admin`.

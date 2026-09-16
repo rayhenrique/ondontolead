@@ -2,14 +2,14 @@
 
 Micro-SaaS B2B multi-tenant para clínicas odontológicas captarem, qualificarem e agendarem leads vindos de tráfego pago. A experiência pública combina triagem clínica, seleção segura de horário e encaminhamento qualificado para o WhatsApp da clínica.
 
-> **Status atual: desenvolvimento inicial (`v0.1.0`).** O projeto ainda não está pronto para uso em produção. Foram concluídas somente as tarefas 1.1 a 1.3 do checklist.
+> **Status atual: desenvolvimento (`v0.2.0`).** O projeto ainda não está pronto para uso em produção. As Fases 1 e 2 estão concluídas.
 
 ## Estado da implementação
 
 | Fase | Situação |
 | --- | --- |
-| 1. Setup e base de dados | Em andamento — tarefas 1.1 a 1.3 concluídas; seeders pendentes |
-| 2. Models, tenancy e scopes | Pendente |
+| 1. Setup e base de dados | Concluída |
+| 2. Models, tenancy e scopes | Concluída |
 | 3. Autenticação e middlewares | Pendente |
 | 4. Core Services | Pendente |
 | 5. Módulo SuperAdmin | Pendente |
