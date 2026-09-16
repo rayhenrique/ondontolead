@@ -48,7 +48,7 @@ class DatabaseSeederTest extends TestCase
         $this->assertIsString($passwordHash);
         $this->assertTrue(Hash::check('secure-test-password', $passwordHash));
 
-        $this->assertDatabaseCount('app_releases', 1);
+        $this->assertDatabaseCount('app_releases', 8);
         $this->assertDatabaseHas('app_releases', [
             'version' => 'v1.0.0',
             'show_modal' => true,

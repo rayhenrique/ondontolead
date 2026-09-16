@@ -21,6 +21,16 @@ Cada nova release deve informar:
 - comandos ou cuidados necessários no deploy;
 - validações executadas.
 
+## Sincronização com o Módulo "Novidades"
+
+O controle de versão é orientado pelos commits e pushes no repositório. Para refletir todo o histórico de versões deste arquivo (`VERSOES.md`) na interface do aplicativo — tanto no módulo **Novidades** da clínica (`/app/novidades`) quanto no painel do SuperAdmin (`/admin/releases`) — execute:
+
+```bash
+php artisan releases:sync
+```
+
+O comando lê automaticamente o `VERSOES.md`, extrai cada release com título, resumo e itens adicionados, e atualiza a tabela `app_releases`. O seeder `AppReleaseSeeder` também realiza essa sincronização automaticamente durante a instalação e deploy.
+
 ## Não lançado
 
 ### Planejado (Pós-MVP)
@@ -59,6 +69,12 @@ Cada nova release deve informar:
 - Compilação dos assets com Vite e Tailwind CSS concluída com sucesso (`npm run build`).
 - Auditoria de segurança aprovada.
 
+### Changelog sugerido para `app_releases`
+
+- **Versão:** `v1.0.0`
+- **Título:** Release Oficial de Produção do MVP — Isolamento, Concorrência e Webhooks
+- **Resumo:** primeiro MVP 100% concluído e validado, com isolamento multi-tenant fail-closed de banco de dados, agendamento concorrente sob transação pessimista e processamento idempotente de webhooks do Mercado Pago.
+
 ### Deploy em Produção
 
 - O MVP está formalmente aprovado e pronto para implantação em produção.
@@ -70,6 +86,7 @@ Cada nova release deve informar:
   5. Iniciar worker permanente de filas para o processamento de webhooks: `php artisan queue:work --queue=webhooks,default --tries=4 --timeout=30`.
   6. Configurar webhooks do Mercado Pago apontando para a URL pública HTTPS: `https://[dominio]/api/webhooks/mercadopago`.
 
+## v0.7.0 — 2026-09-16
 
 **Status:** Módulo Público (`/{slug}`), Wizard Multi-step em Livewire, Triagem Híbrida e Transbordo para WhatsApp concluídos; não apta para produção.
 
@@ -284,6 +301,12 @@ Não publicar esta versão para usuários reais. Uso permitido somente em desenv
 - Formatação Pint aprovada.
 - Auditoria Composer sem vulnerabilidades conhecidas.
 
+### Changelog sugerido para `app_releases`
+
+- **Versão:** `v0.2.0`
+- **Título:** Fundação de Dados, Tenancy e Models
+- **Resumo:** isolamento multi-tenant com BelongsToTenant e TenantScope fail-closed, models de domínio, relacionamentos Eloquent e cast encrypted para chaves de IA.
+
 ### Limitações conhecidas
 
 - Middlewares e Policies da Fase 3 ainda não implementados.
@@ -316,6 +339,12 @@ Não publicar esta versão para usuários reais. Uso permitido somente em desenv
 - Formatação Pint aprovada.
 - Build Vite concluído.
 - Auditorias Composer e npm sem vulnerabilidades conhecidas no momento da release.
+
+### Changelog sugerido para `app_releases`
+
+- **Versão:** `v0.1.0`
+- **Título:** Base de Desenvolvimento e Setup Inicial
+- **Resumo:** estruturação inicial do projeto com Laravel 13, Jetstream, Livewire 3, Tailwind CSS 4 e migrations relacionais em MySQL InnoDB.
 
 ### Limitações conhecidas
 

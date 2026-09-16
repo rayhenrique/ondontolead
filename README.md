@@ -151,7 +151,7 @@ Na versão de produção (`v1.0.0`), a suíte automatizada conta com **188 teste
 - **Grade & Horários (`/app/grade`):** componente Livewire `ScheduleManager` para gestão interativa dos dias da semana (0 a 6), horários de abertura/fechamento, intervalo de almoço, duração customizada dos slots e bloqueio de feriados/recessos com motivo.
 - **Gestão de Agendamentos & Triagens (`/app/agendamentos`):** listagem paginada com abas de status rápido (pendente, confirmado, concluído, cancelado, não compareceu), filtros textuais por paciente/telefone, filtro por data, detalhamento de dor, queixa e resumo clínico gerado por IA, link direto para WhatsApp e atualização de status em tempo real.
 - **Configurações da Clínica (`/app/configuracoes`):** edição de dados públicos, validação de slug com garantia de unicidade, canal do WhatsApp e configuração BYOK para Google Gemini e OpenAI com armazenamento seguro da chave de API em AES-256 (`encrypted`).
-- **Novidades In-App & Modal Changelog (`/app/novidades` e `AppReleaseModal`):** página de histórico de novidades em Markdown e modal global Livewire exibido automaticamente no primeiro acesso após uma nova release, respeitando a Regra RN03 (exibição única por usuário).
+- **Novidades In-App & Modal Changelog (`/app/novidades` e `AppReleaseModal`):** página de histórico de novidades em Markdown e modal global Livewire exibido automaticamente no primeiro acesso após uma nova release, respeitando a Regra RN03 (exibição única por usuário). O histórico completo é sincronizado a partir de `VERSOES.md` via `php artisan releases:sync`.
 
 ## Módulo Público e Formulário implementado (`/{slug}`)
 
