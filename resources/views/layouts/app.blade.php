@@ -20,6 +20,21 @@
     <body class="font-sans antialiased">
         <x-banner />
 
+        @if (session()->has('impersonator_id'))
+            <div class="bg-amber-500 text-white px-4 py-2.5 text-sm font-medium shadow-sm flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <svg class="w-5 h-5 text-amber-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <span>Você está personificando a clínica <strong>{{ Auth::user()->clinic?->name ?? 'Sem clínica' }}</strong> como <strong>{{ Auth::user()->name }}</strong>.</span>
+                </div>
+                <form method="POST" action="{{ route('admin.impersonate.leave') }}" class="inline">
+                    @csrf
+                    <button type="submit" class="bg-white text-amber-900 text-xs font-bold px-3 py-1.5 rounded hover:bg-amber-50 transition shadow-sm">
+                        Sair da Personificação
+                    </button>
+                </form>
+            </div>
+        @endif
+
         <div class="min-h-screen bg-gray-100">
             @livewire('navigation-menu')
 

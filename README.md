@@ -2,7 +2,7 @@
 
 Micro-SaaS B2B multi-tenant para clínicas odontológicas captarem, qualificarem e agendarem leads vindos de tráfego pago. A experiência pública combina triagem clínica, seleção segura de horário e encaminhamento qualificado para o WhatsApp da clínica.
 
-> **Status atual: desenvolvimento (`v0.4.0`).** O projeto ainda não está pronto para uso em produção. As Fases 1 a 4 estão concluídas.
+> **Status atual: desenvolvimento (`v0.5.0`).** O projeto ainda não está pronto para uso em produção. As Fases 1 a 5 estão concluídas.
 
 ## Estado da implementação
 
@@ -12,7 +12,7 @@ Micro-SaaS B2B multi-tenant para clínicas odontológicas captarem, qualificarem
 | 2. Models, tenancy e scopes | Concluída |
 | 3. Autenticação e middlewares | Concluída |
 | 4. Core Services | Concluída |
-| 5. Módulo SuperAdmin | Pendente |
+| 5. Módulo SuperAdmin | Concluída |
 | 6. Módulo da clínica | Pendente |
 | 7. Formulário público | Pendente |
 | 8. Testes críticos do MVP | Pendente |
@@ -112,7 +112,7 @@ composer audit --locked
 npm audit --audit-level=moderate
 ```
 
-Na versão atual, as migrations também foram validadas com execução, rollback e reaplicação em MySQL/InnoDB.
+Na versão atual (`v0.5.0`), a suíte automatizada conta com **137 testes executados (130 aprovados, 7 condicionais ignorados e 437 asserções)** cobrindo autenticação, isolamento multi-tenant, serviços de domínio, painel SuperAdmin, impersonation e endpoint HTTP de webhooks. As migrations também foram validadas com execução, rollback e reaplicação em MySQL/InnoDB.
 
 ## Segurança de acesso implementada
 
@@ -129,6 +129,16 @@ Na versão atual, as migrations também foram validadas com execução, rollback
 - Recepção idempotente de eventos de assinatura do Mercado Pago, consulta da assinatura, atualização transacional da clínica e processamento assíncrono por Job criptografado.
 - Registro do ciclo de processamento em `payment_logs`, sem persistir credenciais ou cabeçalhos sensíveis.
 
+## Módulo SuperAdmin implementado
+
+- **Dashboard Global (`/admin`):** visualização em tempo real de MRR projetado, clínicas ativas, em trial e inadimplentes, além de agendamentos mensais e clínicas recentes.
+- **Gestão de Clínicas (Tenants):** listagem com paginação e filtros, busca textual, cadastro transacional com gestor inicial, edição de dados cadastrais, alteração de plano e prorrogação de trial.
+- **Personificação (Impersonation):** capacidade de acessar diretamente o painel da clínica com banner superior persistente para retorno rápido ao SuperAdmin.
+- **Gestão de Planos:** CRUD de planos com limites mensais de agendamentos, precificação e integridade que impede a exclusão de planos em uso.
+- **Releases e Changelog (`app_releases`):** publicação de notas de atualização em Markdown com gatilho de modal global e auditoria de leitura por usuário.
+- **Configurações do Sistema (`system_settings`):** parametrização visual (nome, logo, favicon, rodapé) com cache persistente.
+- **Endpoint HTTP de Webhook:** rota `POST /api/webhooks/mercadopago` com validação de assinatura HMAC e despacho assíncrono.
+
 ## Arquitetura obrigatória
 
 - Regras de negócio em Service Classes, nunca em Controllers, rotas ou Views.
@@ -141,7 +151,7 @@ Na versão atual, as migrations também foram validadas com execução, rollback
 
 ## Publicação
 
-Não publique a versão atual como aplicação de produção. As proteções de autenticação, assinatura e autorização multi-tenant e os Core Services já existem, mas os painéis, o formulário público, o endpoint HTTP autenticado do webhook e os testes finais de concorrência e idempotência ainda não foram implementados.
+Não publique a versão atual como aplicação de produção. A base de dados, segurança multi-tenant, Core Services, endpoint HTTP de webhook e o painel administrativo global já existem e foram validados, mas o painel da clínica (`/app`), o formulário público (`/{slug}`) e os testes finais de concorrência e homologação pertencem às próximas fases.
 
 Uma VPS de **staging**, sem usuários reais e com acesso restrito, pode ser preparada antecipadamente para validar PHP, MySQL, servidor web, SSL, filas e processo de deploy. A publicação para clientes deve ocorrer somente quando:
 

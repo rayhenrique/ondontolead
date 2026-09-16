@@ -25,8 +25,46 @@ Cada nova release deve informar:
 
 ### Planejado
 
-- Fases 5 a 8 do checklist de implementação.
+- Fases 6 a 8 do checklist de implementação.
 - Release de produção `v1.0.0` após aprovação de todos os critérios do MVP.
+
+## v0.5.0 — 2026-09-16
+
+**Status:** Módulo SuperAdmin, CRUDs de Clínicas, Planos, Releases, Configurações e Webhook HTTP concluídos; não apta para produção.
+
+### Adicionado
+
+- Dashboard global do SuperAdmin (`/admin`) com métricas em tempo real (MRR projetado, clínicas por status, agendamentos do mês e lista recente).
+- Gestão completa de Clínicas/Tenants com filtros, busca textual, criação com usuário gestor inicial e ajuste manual de status e prorrogação de trial.
+- Sistema de Personificação (Impersonation) para o SuperAdmin acessar o painel de qualquer clínica com banner de alerta e botão de retorno seguro.
+- CRUD de Planos com limites mensais, precificação e bloqueio de exclusão quando vinculado a clínicas existentes.
+- Módulo de Novidades e Changelog (`app_releases`) com suporte a Markdown, controle de trigger para modais e contador de leituras por usuário.
+- `SystemSettingService` com cache persistente (`Cache::rememberForever()`) e tela de configurações globais.
+- Endpoint HTTP `POST /api/webhooks/mercadopago` com validação de assinatura HMAC e integração ao serviço idempotente em fila.
+- Menus de navegação dedicados ao SuperAdmin no Jetstream e banner responsivo de impersonation.
+- 26 novos testes de Feature cobrindo todas as áreas administrativas e o endpoint HTTP de webhook.
+
+### Validação
+
+- 137 testes executados: 130 aprovados e 7 condicionais ignorados, totalizando 437 asserções.
+- Formatação Pint executada e aprovada.
+- Build do Vite concluído sem erros.
+
+### Changelog sugerido para `app_releases`
+
+- **Versão:** `v0.5.0`
+- **Título:** Painel Global do SuperAdmin e Gestão do SaaS
+- **Resumo:** módulo SuperAdmin com métricas financeiras (MRR), gestão de clínicas com impersonation, CRUD de planos, changelog de releases e configurações globais.
+
+### Limitações conhecidas
+
+- O painel da clínica (`/app`) com grade de horários e gestão de agendamentos pertence à Fase 6.
+- O formulário público multi-step de triagem e agendamento pertence à Fase 7.
+- Os testes finais de concorrência e homologação pertencem à Fase 8.
+
+### Deploy
+
+Não publicar esta versão para usuários finais. Em staging, o SuperAdmin já pode cadastrar planos e clínicas para homologação.
 
 ## v0.4.0 — 2026-09-16
 

@@ -22,10 +22,10 @@
   - [x] 4.2 `AiTriageService`: Integração agnóstica Gemini/OpenAI e fluxo de fallback com questionário fixo.
   - [x] 4.3 `MercadoPagoWebhookService`: Job em Queue para tratar assinaturas garantindo idempotência com `payment_logs`.
 
-- [ ] **Fase 5: Módulo SuperAdmin (`/admin`)**
-  - [ ] 5.1 Dashboard (métricas gerais) e controle de `system_settings` em cache.
-  - [ ] 5.2 CRUD de Tenants (Clínicas) com funcionalidade de Impersonation.
-  - [ ] 5.3 CRUD de Planos e tela de Gestão de Novidades (Releases).
+- [x] **Fase 5: Módulo SuperAdmin (`/admin`)**
+  - [x] 5.1 Dashboard (métricas gerais) e controle de `system_settings` em cache.
+  - [x] 5.2 CRUD de Tenants (Clínicas) com funcionalidade de Impersonation.
+  - [x] 5.3 CRUD de Planos e tela de Gestão de Novidades (Releases).
 
 - [ ] **Fase 6: Módulo Tenant / Clínica (`/app`)**
   - [ ] 6.1 Dashboard da clínica.
