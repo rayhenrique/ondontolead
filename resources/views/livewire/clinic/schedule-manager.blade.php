@@ -37,28 +37,28 @@
 
                         @if ($schedule['is_active'])
                             <!-- Horário Expediente -->
-                            <div class="sm:col-span-4 flex items-center space-x-2">
-                                <div>
+                            <div class="sm:col-span-4 flex items-center gap-2">
+                                <div class="flex-1 min-w-0">
                                     <label class="block text-[10px] font-mono text-slate-400 uppercase tracking-wider font-extrabold mb-0.5">Início</label>
-                                    <input type="time" wire:model.defer="schedules.{{ $day }}.start_time" class="text-xs font-mono font-semibold rounded-xl border-slate-200 shadow-2xs focus:border-sky-500 focus:ring-sky-500 py-1.5 px-2.5 bg-white" />
+                                    <input type="time" wire:model.defer="schedules.{{ $day }}.start_time" class="w-full text-xs font-mono font-semibold rounded-xl border-slate-200 shadow-2xs focus:border-sky-500 focus:ring-sky-500 py-1.5 px-2 bg-white" />
                                 </div>
-                                <span class="text-slate-400 mt-4 text-xs font-mono">até</span>
-                                <div>
+                                <span class="text-slate-400 mt-4 text-xs font-mono shrink-0">até</span>
+                                <div class="flex-1 min-w-0">
                                     <label class="block text-[10px] font-mono text-slate-400 uppercase tracking-wider font-extrabold mb-0.5">Término</label>
-                                    <input type="time" wire:model.defer="schedules.{{ $day }}.end_time" class="text-xs font-mono font-semibold rounded-xl border-slate-200 shadow-2xs focus:border-sky-500 focus:ring-sky-500 py-1.5 px-2.5 bg-white" />
+                                    <input type="time" wire:model.defer="schedules.{{ $day }}.end_time" class="w-full text-xs font-mono font-semibold rounded-xl border-slate-200 shadow-2xs focus:border-sky-500 focus:ring-sky-500 py-1.5 px-2 bg-white" />
                                 </div>
                             </div>
 
                             <!-- Intervalo / Almoço -->
-                            <div class="sm:col-span-3 flex items-center space-x-2">
-                                <div>
+                            <div class="sm:col-span-3 flex items-center gap-2">
+                                <div class="flex-1 min-w-0">
                                     <label class="block text-[10px] font-mono text-slate-400 uppercase tracking-wider font-extrabold mb-0.5">Intervalo</label>
-                                    <input type="time" wire:model.defer="schedules.{{ $day }}.break_start" placeholder="12:00" class="text-xs font-mono font-semibold rounded-xl border-slate-200 shadow-2xs focus:border-sky-500 focus:ring-sky-500 py-1.5 px-2.5 bg-white" />
+                                    <input type="time" wire:model.defer="schedules.{{ $day }}.break_start" placeholder="12:00" class="w-full text-xs font-mono font-semibold rounded-xl border-slate-200 shadow-2xs focus:border-sky-500 focus:ring-sky-500 py-1.5 px-2 bg-white" />
                                 </div>
-                                <span class="text-slate-400 mt-4 text-xs font-mono">até</span>
-                                <div>
+                                <span class="text-slate-400 mt-4 text-xs font-mono shrink-0">até</span>
+                                <div class="flex-1 min-w-0">
                                     <label class="block text-[10px] font-mono text-slate-400 uppercase tracking-wider font-extrabold mb-0.5">Retorno</label>
-                                    <input type="time" wire:model.defer="schedules.{{ $day }}.break_end" placeholder="13:00" class="text-xs font-mono font-semibold rounded-xl border-slate-200 shadow-2xs focus:border-sky-500 focus:ring-sky-500 py-1.5 px-2.5 bg-white" />
+                                    <input type="time" wire:model.defer="schedules.{{ $day }}.break_end" placeholder="13:00" class="w-full text-xs font-mono font-semibold rounded-xl border-slate-200 shadow-2xs focus:border-sky-500 focus:ring-sky-500 py-1.5 px-2 bg-white" />
                                 </div>
                             </div>
 

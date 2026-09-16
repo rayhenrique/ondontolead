@@ -178,7 +178,7 @@
                         @for ($i = 0; $i <= 10; $i++)
                             <button type="button"
                                     wire:click="$set('pain_level', {{ $i }})"
-                                    class="py-2.5 text-xs font-bold rounded-lg border transition text-center {{ $pain_level === $i ? 'bg-slate-900 text-white border-slate-900 shadow-sm' : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100' }}">
+                                    class="py-2 sm:py-2.5 text-[11px] sm:text-xs font-bold rounded-lg border transition text-center {{ $pain_level === $i ? 'bg-slate-900 text-white border-slate-900 shadow-sm' : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100' }}">
                                 {{ $i }}
                             </button>
                         @endfor
@@ -464,7 +464,15 @@
                     </div>
                     <div class="flex justify-between">
                         <span class="text-slate-500">Prioridade:</span>
-                        <span class="font-bold capitalize text-slate-900">{{ $triage_urgency }}</span>
+                        @php
+                            $urgencyNames = [
+                                'urgent' => 'Urgência Imediata',
+                                'high' => 'Prioridade Alta',
+                                'medium' => 'Prioridade Moderada',
+                                'low' => 'Consulta Eletiva / Baixa Urgência',
+                            ];
+                        @endphp
+                        <span class="font-bold text-slate-900">{{ $urgencyNames[$triage_urgency] ?? ucfirst($triage_urgency) }}</span>
                     </div>
                 </div>
 

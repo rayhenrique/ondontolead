@@ -41,7 +41,7 @@
             @endif
 
             <!-- Status Tabs -->
-            <div class="bg-white rounded-2xl shadow-xs border border-slate-200/80 p-2 flex flex-wrap gap-1.5 sm:gap-2">
+            <div class="bg-white rounded-2xl shadow-xs border border-slate-200/80 p-2 flex items-center gap-1.5 sm:gap-2 overflow-x-auto sm:flex-wrap">
                 @php
                     $tabs = [
                         '' => ['label' => 'Todos', 'count' => $totalCount],
@@ -65,7 +65,7 @@
                         $tabUrl = route('app.appointments.index', $query);
                     @endphp
                     <a href="{{ $tabUrl }}"
-                       class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition {{ $isActive ? 'bg-emerald-500 text-white shadow-xs font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
+                       class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap shrink-0 transition {{ $isActive ? 'bg-emerald-500 text-white shadow-xs font-bold' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
                         <span>{{ $meta['label'] }}</span>
                         <span class="px-2 py-0.5 rounded-full text-[11px] font-mono font-bold {{ $isActive ? 'bg-emerald-700/80 text-white' : 'bg-slate-100 text-slate-600' }}">
                             {{ $meta['count'] }}

@@ -1,8 +1,11 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Profile') }}
+        <h2 class="font-heading font-black text-2xl text-slate-900 tracking-tight leading-tight">
+            Meu Perfil & Segurança
         </h2>
+        <p class="text-xs sm:text-sm text-slate-500 mt-1">
+            Gerencie suas informações cadastrais, altere sua senha e configure a autenticação em duas etapas (2FA).
+        </p>
     </x-slot>
 
     <div>

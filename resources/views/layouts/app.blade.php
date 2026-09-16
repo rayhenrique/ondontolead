@@ -274,12 +274,12 @@
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                         </button>
 
-                        <div class="flex items-center space-x-2">
-                            <span class="font-heading font-bold text-sm sm:text-base text-slate-800">
+                        <div class="flex items-center space-x-2 min-w-0">
+                            <span class="font-heading font-bold text-sm sm:text-base text-slate-800 truncate max-w-[120px] sm:max-w-xs">
                                 {{ $currentClinic?->name ?? 'OdontoLead AI' }}
                             </span>
                             @if ($currentClinic && $currentClinic->subscription_status === 'trial')
-                                <span class="hidden sm:inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-emerald-100 text-emerald-800 uppercase tracking-wider">
+                                <span class="hidden sm:inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-emerald-100 text-emerald-800 uppercase tracking-wider shrink-0">
                                     Trial 14 Dias
                                 </span>
                             @endif
@@ -287,7 +287,7 @@
                     </div>
 
                     <!-- Right: Quick Live Status Badges & Profile Dropdown -->
-                    <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-2 sm:gap-3">
                         @if ($currentClinic)
                             <!-- WhatsApp Status Pill -->
                             <div class="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100/90 text-slate-600 text-xs font-medium border border-slate-200/60">
@@ -303,9 +303,9 @@
 
                             <!-- Public Booking Link -->
                             @if ($currentClinic->slug)
-                                <a href="{{ url('/' . $currentClinic->slug) }}" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-xs rounded-xl border border-emerald-200/80 transition shadow-xs">
-                                    <span>Página Pública</span>
-                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                                <a href="{{ url('/' . $currentClinic->slug) }}" target="_blank" class="inline-flex items-center gap-1.5 p-2 sm:px-3 sm:py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-xs rounded-xl border border-emerald-200/80 transition shadow-xs" title="Página Pública">
+                                    <span class="hidden sm:inline">Página Pública</span>
+                                    <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                                 </a>
                             @endif
                         @endif
