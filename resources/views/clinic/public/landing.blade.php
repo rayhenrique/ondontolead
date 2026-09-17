@@ -92,7 +92,7 @@
             </section>
 
             <!-- Form Wizard Container -->
-            <section class="max-w-2xl mx-auto">
+            <section class="max-w-2xl mx-auto text-slate-900">
                 @if ($isPaused)
                     <div class="p-8 bg-slate-800/90 border border-slate-700 rounded-3xl text-center space-y-4 shadow-xl">
                         <div class="w-16 h-16 rounded-full bg-amber-500/10 text-amber-400 flex items-center justify-center mx-auto">

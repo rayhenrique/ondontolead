@@ -1,4 +1,4 @@
-<div class="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
+<div class="bg-white text-slate-900 rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
     <!-- Stepper Header -->
     <div class="bg-slate-900 text-white p-6 sm:p-8">
         <div class="flex items-center justify-between mb-4">
@@ -87,7 +87,7 @@
                                    wire:model.defer="patient_name"
                                    placeholder="Ex: Maria Clara dos Santos"
                                    required
-                                   class="pl-11 w-full text-sm border-slate-300 rounded-xl focus:ring-emerald-500 focus:border-emerald-500 shadow-sm py-3">
+                                   class="pl-11 w-full text-sm text-slate-900 bg-white placeholder:text-slate-400 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-sm py-3 font-medium">
                         </div>
                         @error('patient_name')
                             <p class="text-xs text-rose-600 mt-1 font-medium">{{ $message }}</p>
@@ -110,7 +110,7 @@
                                    wire:model.defer="patient_phone"
                                    placeholder="(11) 99999-9999"
                                    required
-                                   class="pl-11 w-full text-sm border-slate-300 rounded-xl focus:ring-emerald-500 focus:border-emerald-500 shadow-sm py-3">
+                                   class="pl-11 w-full text-sm text-slate-900 bg-white placeholder:text-slate-400 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-sm py-3 font-medium">
                         </div>
                         <p class="text-[11px] text-slate-400 mt-1">Insira seu DDD e número com 9 dígitos.</p>
                         @error('patient_phone')
@@ -151,7 +151,7 @@
                               rows="3"
                               required
                               placeholder="Ex: Sinto dor aguda ao mastigar no lado direito, ou gostaria de fazer uma avaliação para implante/clareamento..."
-                              class="w-full text-sm border-slate-300 rounded-xl focus:ring-emerald-500 focus:border-emerald-500 shadow-sm"></textarea>
+                              class="w-full text-sm text-slate-900 bg-white placeholder:text-slate-400 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-sm p-3.5 font-medium"></textarea>
                     @error('complaint')
                         <p class="text-xs text-rose-600 mt-1 font-medium">{{ $message }}</p>
                     @enderror
@@ -227,7 +227,7 @@
                            id="medical_history"
                            wire:model.defer="medical_history"
                            placeholder="Ex: Alergia a penicilina, diabetes, hipertensão..."
-                           class="w-full text-sm border-slate-300 rounded-xl focus:ring-emerald-500 focus:border-emerald-500 shadow-sm">
+                           class="w-full text-sm text-slate-900 bg-white placeholder:text-slate-400 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-sm py-3 px-3.5 font-medium">
                 </div>
 
                 <div class="pt-4 flex items-center justify-between border-t border-slate-100">
@@ -348,7 +348,7 @@
                                id="selected_date"
                                wire:model.live="selected_date"
                                min="{{ now()->format('Y-m-d') }}"
-                               class="text-sm border-slate-300 rounded-xl focus:ring-emerald-500 focus:border-emerald-500 shadow-sm py-2.5 px-4 font-semibold">
+                               class="text-sm text-slate-900 bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-sm py-2.5 px-4 font-semibold">
 
                         <!-- Fast Date Buttons -->
                         <div class="flex items-center gap-2">
